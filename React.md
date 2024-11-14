@@ -37,9 +37,7 @@ In React, two-way binding isn’t built-in by default. Instead, we manually impl
 
 Here’s an example using a text input to collect a username. This example demonstrates how two-way binding works in React.
 
-jsx
 
-Copy code
 
 ```
 import React, { useState } from 'react';
@@ -137,3 +135,127 @@ const App = () => {
 export default App;
 ```
 
+## Tailwind Installation in React -
+ [TailwindVite](https://tailwindcss.com/docs/guides/vite)
+
+### Context Api 
+It is used to centralize the data.
+Eg
+```App.jsx
+
+import React, { useContext } from 'react'
+
+import UserContext, { DataContext } from './context/UserContext'
+
+const App = () => {
+
+  const data = useContext(DataContext)
+
+  console.log(data);
+
+  return (
+
+    <div>
+
+      <h1>App</h1>
+
+      <Header/>
+
+      <Section/>
+
+      <Footer/>
+
+    </div>
+
+  )
+
+}
+
+export default App
+```
+
+```UseContext.jsx
+
+import React, { createContext } from 'react'
+
+export const DataContext = createContext();
+
+const UserContext = ({ children }) => {
+
+    const username = "pratik"
+
+    return (
+
+        <DataContext.Provider value={username}>
+
+            {children}
+
+        </DataContext.Provider>
+
+    )
+
+}
+
+export default UserContext
+
+```
+```Main.jsx
+
+import { StrictMode } from 'react'
+
+import { createRoot } from 'react-dom/client'
+
+import App from './App.jsx'
+
+import './index.css'
+
+import UserContext from './context/UserContext.jsx'
+
+createRoot(document.getElementById('root')).render(
+
+<UserContext>
+
+ <App />
+
+</UserContext>
+```
+
+## Map & Filter-
+MAP- In map array must be return. 
+
+Filter- only print either true or false.
+#### `filter`
+
+- **Purpose**: Creates a new array with elements that pass a test (returns `true`).
+- **Usage**: For selecting items based on conditions.
+- **Example**:
+    
+    javascript
+    
+    Copy code
+    
+    `const numbers = [1, 2, 3, 4]; const evens = numbers.filter(num => num % 2 === 0); console.log(evens); // [2, 4]`
+    
+
+#### `map`
+
+- **Purpose**: Creates a new array by transforming each element.
+- **Usage**: For modifying each element in an array.
+- **Example**:
+    
+    javascript
+    
+    Copy code
+    
+    `const numbers = [1, 2, 3]; const doubled = numbers.map(num => num * 2); console.log(doubled); // [2, 4, 6]`
+    
+
+#### Combining `filter` and `map`
+
+Filter first, then transform:
+
+javascript
+
+Copy code
+
+`const numbers = [1, 2, 3, 4, 5]; const squaredEvens = numbers.filter(num => num % 2 === 0).map(num => num ** 2); console.log(squaredEvens); // [4, 16]`
