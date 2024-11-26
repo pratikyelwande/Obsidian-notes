@@ -1,3 +1,4 @@
+Created by Facebook employee in 2013 and Open source in 2015.
 # React Router DOM
 
 The `react-router-dom` package contains bindings for using [React Router](https://github.com/remix-run/react-router) in web applications.
@@ -12,10 +13,28 @@ The `react-router-dom` package contains bindings for using [React Router](htt
 1. **Install React Router**: `npm install react-router-dom`
 2. **Wrap `App` in `BrowserRouter`**: Add `<BrowserRouter>` in `index.js`.
 3. **Create Components**: Create `Header` or other components you want to route.
-4. **Set Up Routes in App Component**: Use `Routes` and `Route` components with the `element` prop.
+4. **Set Up Routes in App Component**: Use `Routes` and `Route` components with the `element` props
+```<Routes>
+
+        <Route path="/" element={<Home />} />
+
+        <Route path="/about" element={<About />} />
+
+      </Routes>
+```
 5. **Add Navigation Links**: Use `<Link>` components for easy navigation if needed.
 
+```
+<nav>
 
+        <Link to="/">Home</Link>
+
+        <Link to="/about">About</Link>
+
+        <Link to="/contact">Contact</Link>
+
+      </nav>
+```
 
 
 
@@ -259,3 +278,221 @@ javascript
 Copy code
 
 `const numbers = [1, 2, 3, 4, 5]; const squaredEvens = numbers.filter(num => num % 2 === 0).map(num => num ** 2); console.log(squaredEvens); // [4, 16]`
+
+
+# Use State-
+State in React is a way to track and manage changing data over time.
+Working on objects-
+```function App() {
+const [count, setCount] = useState({name:"John", age:true});
+  return (
+    <>
+    <h1>name: {count.name}</h1>
+    <h1>age: {count.age.toString()}</h1>
+    <button onClick={()=>setCount({...count, age:count.age+1})}>Increase Age</button>
+    </>
+  )
+}
+```
+
+# Form Handling
+It can be performed many ways 
+1. ==UseRef==-
+		Keep values between renders without re-rendering when updated.
+		`useRef()` only returns one item. It returns an Object called `current`.
+		When we initialize `useRef` we set the initial value: `useRef(0)`.
+
+		```
+		function App() {
+
+		  const nm=useRef(null)
+
+		  const handleSubmit=(e)=>{
+
+	    e.preventDefault()
+
+	      console.log(nm.current.value)
+		  }
+		  return (
+		    <>
+		
+		    <form action="" onSubmit={handleSubmit}>
+		
+		     <input type="text" ref={nm}/>
+		
+		     <input type="submit" />
+		
+		    </form>
+		
+		    </>
+		
+		  );
+		
+		}```
+		
+2. ==React Hook Form-==
+		 simplify form handling. RHF provides a `useForm` hook that manages form state and validation.
+		 First install npm install react-hook-form
+```const App =()=> {
+
+  const { register, handleSubmit } = useForm();
+
+  
+
+  const onSubmit = async (data) => {
+
+    console.log(data); // Log form data to verify it's working
+
+  };
+
+  
+
+  return (
+
+    <div>
+
+      <form onSubmit={handleSubmit(onSubmit)}>
+
+        <input {...register('email')} type="email" placeholder="Email" required />
+
+        <input {...register('password')} type="password" placeholder="Password" required />
+
+        <button type="submit">Login</button>
+
+      </form>
+
+    </div>
+
+  );
+
+}
+```
+
+
+## UseContext-
+The `useContext` hook in React is used to manage shared state or data across a component tree without prop drilling.
+
+### Dynamic Routing
+
+Set up the main routes using `react-router-dom`.
+
+
+
+`import React from "react"; import { BrowserRouter as Router, Routes, Route } from "react-router-dom"; import UserList from "./UserList"; import UserDetails from "./UserDetails";  const App = () => (   <Router>     <Routes>       <Route path="/" element={<UserList />} />       <Route path="/user/:id" element={<UserDetails />} />     </Routes>   </Router> );  export default App;`
+
+---
+
+### **2. UserList.jsx**
+
+Create a list of users with links pointing to their respective dynamic routes.
+
+
+``import React from "react"; import { Link } from "react-router-dom";  const users = [   { id: 1, name: "John Doe" },   { id: 2, name: "Jane Smith" },   { id: 3, name: "Alice Johnson" }, ];  const UserList = () => (   <div>     <h1>User List</h1>     <ul>       {users.map((user) => (         <li key={user.id}>           <Link to={`/user/${user.id}`}>{user.name}</Link>         </li>       ))}     </ul>   </div> );  export default UserList;``
+
+---
+
+### **3. UserDetails.jsx**
+
+Fetch and display user details dynamically based on the route's `id` parameter.
+
+
+`import React from "react"; import { useParams } from "react-router-dom";  const UserDetails = () => {   const { id } = useParams();    // Mock user details   const userDetails = {     1: { name: "John Doe", age: 28, email: "john.doe@example.com" },     2: { name: "Jane Smith", age: 32, email: "jane.smith@example.com" },     3: { name: "Alice Johnson", age: 24, email: "alice.johnson@example.com" },   };    const user = userDetails[id];    return (     <div>       {user ? (         <>           <h1>{user.name}</h1>           <p>Age: {user.age}</p>           <p>Email: {user.email}</p>         </>       ) : (         <p>User not found</p>       )}     </div>   ); };  export default UserDetails;`
+### **How It Works**
+
+1. **Dynamic Route**: `"/user/:id"` specifies a route that accepts a dynamic `id` parameter.
+2. **`useParams` Hook**: Extracts the `id` from the URL (e.g., `/user/1` gives `id = 1`).
+3. **Links**: `Link` components in `UserList` navigate to dynamic routes like `/user/1` or `/user/2`
+
+# Async JS
+### **Call Stack (Main Stack)**
+
+- Executes **synchronous** code, one function at a time.
+- Functions are **pushed** onto the stack when called and **popped** when completed.
+
+`function greet() {   console.log("Hello"); } greet(); // Pushed, executed, then popped`
+
+---
+### **2. Microtask Queue (Promises)**
+
+- Handles **Promises** and `async/await`.
+- Microtasks have **higher priority** than Task Queue callbacks.
+
+`Promise.resolve().then(() => {   console.log("Promise Task"); });`
+
+---
+
+### **3. Task Queue (Callback Queue)**
+
+- Stores callbacks from `setTimeout`, `setInterval`, and other async tasks.
+- Executed after all Microtasks are completed.
+
+`setTimeout(() => {   console.log("Task Queue Callback"); }, 0);`
+
+---
+### **5 Event Loop**
+
+- Manages the execution order:
+    1. Executes the **Call Stack**.
+    2. Processes the **Microtask Queue**.
+    3. Processes the **Task Queue**.
+
+`console.log("Start");  setTimeout(() => console.log("Task"), 0); Promise.resolve().then(() => console.log("Microtask"));  console.log("End");`
+
+op-
+
+`Start End Microtask Task`
+
+---
+
+### **Key Points**
+
+1. **Synchronous code** runs first on the Call Stack.
+2. **Asynchronous tasks** are handled by Web APIs, queued, and executed later.
+3. **Microtasks (Promises)** have higher priority than Task Queue callbacks.
+
+### **1. Callbacks**
+
+A **callback** is a function passed as an argument to another function and executed after some operation is completed.
+
+**Example:**
+
+javascript
+
+Copy code
+
+`function fetchData(callback) {   setTimeout(() => {     console.log("Data fetched");     callback();   }, 1000); }  fetchData(() => {   console.log("Callback executed"); });`
+
+---
+
+### **2. Promises**
+
+A **Promise** is an object that represents the eventual completion (or failure) of an asynchronous operation.
+
+**States of a Promise:**
+
+1. **Pending:** Initial state.
+2. **Fulfilled:** Operation completed successfully.
+3. **Rejected:** Operation failed.
+
+**Example:**
+
+javascript
+
+Copy code
+
+`const fetchData = new Promise((resolve, reject) => {   setTimeout(() => {     resolve("Data fetched");   }, 1000); });  fetchData   .then((data) => console.log(data)) // Runs when resolved   .catch((error) => console.log(error)); // Runs when rejected`
+
+---
+
+### **3. `async/await`**
+
+`async/await` is syntactic sugar over Promises, making asynchronous code look synchronous.
+
+**Example:**
+
+javascript
+
+Copy code
+
+`async function fetchData() {   const data = await new Promise((resolve) => {     setTimeout(() => {       resolve("Data fetched");     }, 1000);   });   console.log(data); }  fetchData();`
+
