@@ -10,3 +10,5 @@ Here are the different types of the JOINs in SQL:
 ![SQL INNER JOIN](https://www.w3schools.com/sql/img_inner_join.png)  ![SQL LEFT JOIN](https://www.w3schools.com/sql/img_left_join.png)  
 ![SQL RIGHT JOIN](https://www.w3schools.com/sql/img_right_join.png)  ![SQL FULL OUTER JOIN](https://www.w3schools.com/sql/img_full_outer_join.png)
 
+
+

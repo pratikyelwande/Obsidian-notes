@@ -210,3 +210,96 @@ Copy code
 
 `type Person = { name: string }; type Employee = { company: string };  type WorkingPerson = Person & Employee;  const worker: WorkingPerson = {   name: "John",   company: "TechCorp", };`
 
+# Pick
+### **`Pick` in TypeScript**
+
+The **`Pick` utility type** in TypeScript is used to create a new type by selecting specific keys from an existing type. It helps in creating a subset of a type by picking only the required properties.
+
+---
+### **Syntax:**
+
+typescript
+
+`Pick<Type, Keys>`
+
+- **`Type`**: The original type you want to pick properties from.
+- **`Keys`**: The keys you want to include in the new type.
+
+---
+### **Why Use `Pick`?**
+
+- To extract only the required properties from a large type.
+- Helps in reducing type duplication.
+- Useful for APIs where only a subset of data is needed.
+
+---
+### **Example:**
+
+typescript
+
+```
+// Original Type 
+type User = {   id: number;   name: string;   email: string;   isAdmin: boolean; }; 
+// Create a new type with only `id` and `name` 
+type UserPreview = Pick<User, "id" | "name">;  
+const user: UserPreview = {   id: 1,   name: "Pratik", };
+console.log(user); // Output: { id: 1, name: "Pratik" }
+`````
+
+# Partial
+### **TypeScript `Partial` Utility Type**
+
+The `Partial` utility type in TypeScript is used to make all properties of an object type optional.
+
+​when you want to work with objects that might only have some properties of a defined type.
+
+---
+
+### **Example**
+
+typescript
+
+```
+interface User {   id: number;   name: string;   email: string; }
+// Use Partial to make all properties optional 
+const updateUser = (id: number, userData: Partial<User>): void =>
+{   console.log(`Updating user ${id} with data:`, userData); };  
+updateUser(1, { name: "Pratik" });
+// Only updates the name 
+updateUser(2, { email: "pratik@example.com" }); // Only updates the email
+```
+
+### ** Readonly Utility Type**
+
+The `Readonly` utility type in TypeScript is used to make all properties of an object type immutable. Once a property is set, it cannot be changed.
+
+---
+
+You use `Readonly` when you want to ensure that the properties of an object are not accidentally modified.
+
+---
+
+### **Example**
+
+typescript
+
+Copy code
+
+`interface User {   id: number;   name: string;   email: string; }  // Make all properties readonly const user: Readonly<User> = {   id: 1,   name: "Pratik",   email: "pratik@example.com", };  // user.id = 2; // Error: Cannot assign to 'id' because it is a read-only property console.log(user.id); // Works fine: Output is 1`
+
+---
+
+### **TypeScript `Record` Utility Type**
+
+The `Record` utility type is used to construct a type with a set of keys and their corresponding values. It allows you to define an object type with specified keys and the type of their values.
+
+---
+### **Example**
+
+typescript
+
+```
+type UserRoles = Record<string, string>;  
+const roles: UserRoles = {   admin: "John",   editor: "Jane",   viewer: "Doe", };  
+console.log(roles.admin); // Output: John
+````
