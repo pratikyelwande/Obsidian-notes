@@ -1,0 +1,2 @@
+aisql
+cortex ai

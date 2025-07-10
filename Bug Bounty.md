@@ -473,3 +473,557 @@ Copy code
 - `https://adfs.aerlingus.com`
 - `https://chat.avios.com`
 - `https://forwardrewards.iagcargo.com`
+
+# Zaid Bug bounty course
+# ### **1. Recon – Find All Targets (Passive)**
+
+> 🎯 **Goal**: Discover domains, subdomains, and endpoints in-scope
+
+🛠 Tools:
+
+- `subfinder`, `amass`, `assetfinder`, `crt.sh`, `chaos`, `github-subdomains`
+    
+
+bash
+
+CopyEdit
+
+`subfinder -d target.com -silent > subs.txt amass enum -passive -d target.com >> subs.txt`
+
+---
+
+### 🔶 **2. Probe for Live Assets**
+
+> 🎯 **Goal**: Find which subdomains are alive and hosting services
+
+🛠 Tools:
+
+- `dnsx`, `httpx`
+    
+
+bash
+
+CopyEdit
+
+`cat subs.txt | dnsx > resolved.txt cat resolved.txt | httpx -title -tech-detect -status-code > live.txt`
+
+---
+
+### 🔶 **3. Crawl & Discover Endpoints**
+
+> 🎯 **Goal**: Get all available URLs, hidden paths, APIs, JS files
+
+🛠 Tools:
+
+- `waybackurls`, `gau`, `hakrawler`, `gospider`
+    
+
+bash
+
+CopyEdit
+
+`cat live.txt | waybackurls > wayback.txt`
+
+---
+
+### 🔶 **4. Parameter Discovery**
+
+> 🎯 **Goal**: Find parameters to test for XSS, SQLi, IDOR, etc.
+
+🛠 Tools:
+
+- `gf`, `paramspider`, `LinkFinder`, `qsreplace`
+    
+
+bash
+
+CopyEdit
+
+`cat wayback.txt | gf xss cat wayback.txt | gf sqli`
+
+---
+
+### 🔶 **5. Fuzzing and Bruteforcing**
+
+> 🎯 **Goal**: Discover hidden endpoints, files, or logic via brute-force
+
+🛠 Tools:
+
+- `ffuf`, `dirsearch`, `gobuster`
+    
+
+bash
+
+CopyEdit
+
+`ffuf -u https://site.com/FUZZ -w raft-medium-directories.txt -mc 200,403`
+
+---
+
+### 🔶 **6. Load into Burp Suite — 🔥 Manual Testing Begins**
+
+> 🎯 **Goal**: Deep testing, fuzzing, and exploitation
+
+### 💥 Burp Suite Tasks:
+
+- 🔍 Map endpoints using **Proxy** and **Spider**
+    
+- 🧪 Send requests to **Repeater** for manual tampering
+    
+- 🚨 Use **Intruder** for:
+    
+    - Bruteforcing
+        
+    - Bypassing WAFs
+        
+    - Fuzzing inputs
+        
+- 📦 Load **extensions**:
+    
+    - `Autorize` – IDOR & Auth checks
+        
+    - `Turbo Intruder` – Fast fuzzing
+        
+    - `Param Miner` – Find hidden params
+        
+    - `JS Link Finder` – JS endpoint scraping
+        
+- 📊 Use **Scanner (Pro)** for auto-vuln checks
+    
+
+> 🧠 Example: Test reflected parameters from recon in Burp Repeater with:
+
+html
+
+CopyEdit
+
+`<script>alert(1)</script>`
+
+---
+
+### 🔶 **7. Vulnerability Testing (Manual + Tool-assisted)**
+
+> 🎯 **Goal**: Find actual bugs – XSS, SSRF, SQLi, IDOR, etc.
+
+🛠 Tools:
+
+- Burp Suite
+    
+- `nuclei` for CVE/misconfig scanning
+    
+- Browser DevTools for CSP, CORS, etc.
+    
+
+---
+
+### 🔶 **8. Reporting**
+
+> 🎯 **Goal**: Create a clean, reproducible bug report with impact and PoC
+
+Include:
+
+- Request/response (Burp export)
+    
+- Screenshots or videos
+    
+- Clear steps and affected endpoints
+## zone one Transfer-
+---
+
+## ✅ 1. What is DNS?
+
+**DNS (Domain Name System)** is the internet's phonebook.
+
+It translates **domain names (like `example.com`)** into **IP addresses (like `93.184.216.34`)**, so browsers can load websites.
+
+---
+
+## ✅ 2. What are Nameservers?
+
+Nameservers are **special DNS servers** that store the DNS records for a domain.
+
+They:
+
+- Answer queries like “what is the IP of www.example.com?”
+    
+- Store DNS records like `A`, `MX`, `NS`, `TXT`, etc.
+    
+- Can **share records with each other** via **zone transfers**
+    
+
+---
+
+## ✅ 3. What is a Zone File?
+
+A **zone file** is the full list of DNS records for a domain.
+
+It contains:
+
+- `A` – maps domain to IPv4
+    
+- `AAAA` – maps domain to IPv6
+    
+- `CNAME` – aliases
+    
+- `MX` – mail servers
+    
+- `TXT` – metadata (SPF, DKIM, verification)
+    
+- `NS` – nameservers
+    
+- `PTR`, `SOA`, `SRV`, `NAPTR`, etc.
+    
+
+---
+
+## ✅ 4. What is a Zone Transfer (AXFR)?
+
+Zone transfer is a **mechanism to sync DNS records between nameservers**.
+
+### 🔥 AXFR = "Authoritative Zone Transfer Request"
+
+It's **used between DNS servers** to copy full zone data:
+
+- Master to slave
+    
+- Primary to secondary
+    
+
+### ⚠️ If misconfigured, **anyone can ask for it** — **that’s the vulnerability**.
+
+---
+
+## ✅ 5. Why AXFR Is a Security Risk
+
+If a public DNS server **allows AXFR from anyone**, an attacker can:
+
+- Get a full list of **all DNS records**
+    
+- Discover **internal**, **dev**, and **hidden** subdomains
+    
+- Bypass brute-force recon
+    
+- Increase attack surface instantly
+    
+
+💣 This is a serious bug bounty finding — especially if it leaks sensitive services like:
+
+- `dev.target.com`
+    
+- `admin.target.com`
+    
+- `db1.internal.target.com`
+    
+
+---
+
+## ✅ 6. Real-World Analogy
+
+- 🔍 **Normal DNS**: “What’s the phone number of _John_?”
+    
+- 💣 **AXFR**: “Give me your **entire phonebook** — every contact!”
+    
+
+---
+
+## ✅ 7. Practical: Step-by-Step AXFR Test
+
+### 🔧 Step 1: Install dig
+
+bash
+
+CopyEdit
+
+`sudo apt update && sudo apt install dnsutils -y`
+
+---
+
+### 🔎 Step 2: Get Nameservers
+
+bash
+
+CopyEdit
+
+`dig ns zonetransfer.me +short`
+
+🔽 Output:
+
+CopyEdit
+
+`nsztm1.digi.ninja. nsztm2.digi.ninja.`
+
+---
+
+### 💣 Step 3: Run Zone Transfer
+
+bash
+
+CopyEdit
+
+`dig axfr zonetransfer.me @nsztm1.digi.ninja`
+
+✅ If vulnerable, you'll see:
+
+- All subdomains
+    
+- All mail servers
+    
+- Admin/dev hosts
+    
+- Internal IPs
+    
+- XSS/SQLi test records
+    
+
+---
+
+## ✅ 8. Real Bug Bounty Example
+
+bash
+
+CopyEdit
+
+`dig axfr target.com @ns1.target.com`
+
+🎯 You get:
+
+csharp
+
+CopyEdit
+
+`jenkins.target.com staging.target.com api-internal.target.com dev.target.com`
+
+You scan with:
+
+bash
+
+CopyEdit
+
+`cat subdomains.txt | httpx`
+
+And find:
+
+- Open Jenkins → RCE
+    
+- Leaky dev login → IDOR
+    
+- API on staging → unauth access
+    
+
+→ 🔥 $1000–$5000 bounty
+
+---
+
+## ✅ 9. How to Extract Subdomains from AXFR Output
+
+bash
+
+CopyEdit
+
+`dig axfr zonetransfer.me @nsztm1.digi.ninja | grep 'zonetransfer.me' | awk '{print $1}' | sort -u > subs.txt`
+
+Then:
+
+bash
+
+CopyEdit
+
+`cat subs.txt | httpx`
+
+---
+
+## ✅ 10. All Relevant DNS Record Types
+
+|Type|Purpose|Example|
+|---|---|---|
+|A|IPv4 Address|`www → 93.184.216.34`|
+|AAAA|IPv6 Address|`ipv6.example.com → ::1`|
+|MX|Mail Server|`mail.example.com`|
+|NS|Nameserver|`ns1.example.com`|
+|TXT|Text/Meta|`"v=spf1 include:_spf.google.com"`|
+|CNAME|Alias|`www → example.com`|
+|PTR|Reverse lookup|`IP → domain`|
+|SOA|Start of Authority|Info about the zone itself|
+|SRV|Service records|`for SIP, VoIP, etc.`|
+|NAPTR|Enum and SIP routing|`VoIP use cases`|
+|LOC|Physical location|`GPS coords`|
+
+---
+
+## ✅ 11. Tools You Can Use
+
+|Tool|Command|
+|---|---|
+|🧪 `dig`|`dig axfr example.com @ns1.example.com`|
+|🧠 `dnsrecon`|`dnsrecon -d example.com -t axfr`|
+|🔁 `dnsenum`|`dnsenum example.com`|
+|🧼 Cleanup|`awk`, `grep`, `sort`, `uniq` for subdomain extraction|
+|🌐 Scan|`httpx`, `ffuf`, `nuclei` on extracted hosts|
+
+---
+
+## ✅ 12. Bug Bounty Report Template
+
+**Title**: Unauthenticated DNS Zone Transfer on `ns1.target.com`
+
+**Impact**:
+
+- Leaks internal infrastructure (50+ subdomains)
+    
+- Includes dev, staging, and internal services
+    
+- Expands attack surface significantly
+    
+
+**Steps to Reproduce**:
+
+bash
+
+CopyEdit
+
+`dig axfr target.com @ns1.target.com`
+
+**Recommendation**:
+
+- Restrict AXFR to internal trusted IPs only
+    
+- Disable AXFR if not required
+    
+
+---
+
+## ✅ 13. Auto Zone Transfer Tester Script (Bonus)
+
+Want one? Just say:
+
+> **"Give me zone transfer script"**
+
+I’ll drop a bash or Python script to:
+
+- Automatically test a list of domains
+    
+- Pull NS records
+    
+- Try AXFR
+    
+- Dump results
+    
+
+---
+
+## 🧠 Final Summary
+
+|Concept|Explanation|
+|---|---|
+|DNS|Translates domain ↔ IP|
+|Nameserver|DNS server that stores zone info|
+|Zone File|All DNS records for a domain|
+|AXFR|Request to transfer all DNS records|
+|Bug|If NS allows AXFR from anyone → critical info leak|
+|Bug bounty value|🏆 P2–P3 depending on data leaked|
+## 1. `nslookup` — Name Server Lookup
+
+### 🧠 What is `nslookup`?
+
+`nslookup` is a tool used to query DNS (Domain Name System) to get info about:
+
+- IP addresses of domains
+    
+- Mail servers (MX records)
+    
+- Nameservers (NS)
+    
+- Other DNS records (CNAME, TXT, etc.)
+    
+
+---
+
+### ✅ Basic Syntax
+
+bash
+
+CopyEdit
+
+`nslookup [domain]`
+
+### 📘 Example:
+
+bash
+
+CopyEdit
+
+`nslookup example.com`
+
+🖥️ Output:
+
+makefile
+
+CopyEdit
+
+`Name:    example.com Address: 93.184.216.34`
+
+## 2. `whois` — Domain Ownership Lookup
+
+### 🧠 What is `whois`?
+
+`whois` is used to look up **domain registration info**, including:
+
+- Domain owner
+    
+- Registrar (GoDaddy, Namecheap, etc.)
+    
+- Creation & expiry dates
+    
+- Nameservers
+    
+- Admin contact (sometimes email, phone)
+    
+
+---
+
+### ✅ Basic Syntax
+
+bash
+
+CopyEdit
+
+`whois example.com`
+
+### 📘 Example Output:
+
+yaml
+
+CopyEdit
+
+`Domain Name: EXAMPLE.COM Registry Domain ID: ... Registrar WHOIS Server: whois.iana.org Registrar: RESERVED-Internet Assigned Numbers Authority Updated Date: 2024-01-01 Creation Date: 1995-08-14 Name Server: a.iana-servers.net ...`
+
+## **What is WPScan?**
+
+> **WPScan** is a free, open-source **WordPress vulnerability scanner** used to find:
+
+- Vulnerable **core versions**
+    
+- Outdated or insecure **plugins** and **themes**
+    
+- Leaked **usernames**
+    
+- Misconfigurations and **exposed files**
+    
+- Known CVEs via the WPVulnDB API
+    
+
+---
+
+## 🔍 **When to Use WPScan**
+
+✅ If the target runs WordPress — confirmed by:
+
+- `wp-admin`, `wp-login.php`, `wp-content`, `wp-includes`
+    
+- Wappalyzer/WhatWeb shows WordPress
+    
+- Meta tags like `<meta name="generator" content="WordPress">`
+  
+## ==IDOR (Indirect Object Reference)==
+
+ 
