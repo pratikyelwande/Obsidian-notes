@@ -48,7 +48,7 @@ If async → send to:
 JavaScript handles memory automatically using garbage collection, primarily with the mark-and-sweep algorithm.  
 Closures can cause memory leaks if they unintentionally hold references to unused variables — especially in long-lived functions like event handlers.
 ## ==DataType==
-### **1. Global Scope**
+### ==**1. Global Scope**==
 
 > Any variable declared **outside of all functions and blocks** is in the global scope.
 
@@ -58,7 +58,7 @@ Closures can cause memory leaks if they unintentionally hold references to unuse
 
 ---
 
-### 🔧 **2. Function Scope**
+### ==🔧 **2. Function Scope**==
 
 > A variable declared **inside a function** is only accessible **inside that function**.
 
@@ -73,7 +73,7 @@ Closures can cause memory leaks if they unintentionally hold references to unuse
 
 ---
 
-### 🧱 **3. Block Scope**
+### ==🧱 **3. Block Scope**==
 
 > A variable declared with `let` or `const` inside **any `{}` block** exists **only inside that block**.
 
@@ -357,7 +357,7 @@ Asynchronous JavaScript allows your program to start a task that might take a lo
 
 `Count: 1  Count: 2  Count: 3  Count: 4  Count: 5`
 
-## What Is a Promise?
+## ==What Is a Promise?==
 
 A **Promise** is a JavaScript object that represents a value that may **not be available yet**, but will be resolved **in the future** (or fail).
 
