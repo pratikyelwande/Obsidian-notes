@@ -15,7 +15,7 @@
 ==JSX stands for **JavaScript XML**. It’s a **syntax extension** that allows us to write **HTML directly inside JavaScript==
 ## What is State in React?
 
-**State** is an object that holds **data** about the component that can **change over time**.
+==**State** is an object that holds **data** about the component== that can **change over time**.
 
 Whenever state **changes**, the component **re-renders**, and the UI updates automatically.
 
@@ -24,7 +24,7 @@ Whenever state **changes**, the component **re-renders**, and the UI updates aut
 A **component** is a **reusable building block** of a React application.  
 It’s a JavaScript **function** (or class) that returns **JSX**, which tells React **what to render** on the screen.
 
-## **What is a Lifecycle?**
+## ==**What is a Lifecycle?**==
 
 ## 🔄 3 Main Lifecycle Phases
 
@@ -61,7 +61,7 @@ When you write this:
 
 React **compiles** it (via Babel)to
 
-Babel is a transpiler(combination of compile and transform)
+==Babel is a transpiler==(combination of compile and transform)
 **You write code in JSX + modern JS**  
 ⬇️  
 🛠 **Babel translates it to plain JS**  
@@ -139,7 +139,14 @@ Think of props like **function arguments**, but for components.
 ### 🧩 `MovieCard.jsx`
 
 
-`const MovieCard = ({ title, rating, isAvailable }) => (   <div style={{ border: '1px solid #ccc', padding: '12px', margin: '10px' }}>     <h2>{title}</h2>     <p>Rating: {rating}/10</p>     <p style={{ color: isAvailable ? 'green' : 'red' }}>       {isAvailable ? 'Now Showing' : 'Coming Soon'}     </p>   </div> );  export default MovieCard;`
+```
+const MovieCard = ({ title, rating, isAvailable }) => (
+   <div style={{ border: '1px solid #ccc', padding: '12px', margin: '10px' }}>     <h2>{title}</h2>     <p>Rating: {rating}/10</p>  
+  <p style={{ color: isAvailable ? 'green' : 'red' }}>  
+       {isAvailable ? 'Now Showing' : 'Coming Soon'}    
+   </p>   </div> ); 
+   export default MovieCard;
+```
 
 ### 🧩 `App.jsx`
 
@@ -178,7 +185,8 @@ Think of props like **function arguments**, but for components.
 
 **Default props** are fallback values a component uses for its properties (props) if the parent component **doesn't explicitly provide those props**. They ensure your component always has certain values to work with, even if a parent forgets to pass them, making the component more robust and easier to use.
 
-`import React from 'react';
+```
+import React from 'react';
 import ReactDOM from 'react-dom/client';
 
 // --- Child Component: WelcomeMessage ---
@@ -206,7 +214,8 @@ const App = () => {
     </div>
   );
 };
-`
+```
+
 
 ## **Callback Props (Function Props)**
 
@@ -294,7 +303,17 @@ Parent
 ---
 ## 🧪 Example
 
-`import React, { useState } from 'react';  function Counter() {   const [count, setCount] = useState(0); // initialValue = 0    return (     <div>       <p>Count: {count}</p>       <button onClick={() => setCount(count + 1)}>Increment</button>     </div>   ); }`
+```
+import React, { useState } from 'react';  
+function Counter() {
+   const [count, setCount] = useState(0); // initialValue = 0    
+   return (     
+   <div> 
+   <p>Count: {count}</p>       
+   <button onClick={() => setCount(count + 1)}>Increment</button>    
+    </div>); 
+   }
+```
 
 ---
 ## 🛠️ State Update Flow
@@ -334,7 +353,11 @@ Parent
 ## 🧪 Syntax
 
 
-`useEffect(() => {   // Side-effect logic here   return () => {     // Cleanup (optional)   }; }, [dependencies]);`
+```
+useEffect(() => {   // Side-effect logic here   
+return () => {
+// Cleanup (optional)   }; }, [dependencies]);
+```
 
 ---
 
@@ -349,11 +372,17 @@ Parent
 ---
 ## 🧪 Example 1: API Call on Mount
 
-`import { useEffect, useState } from 'react';  function UserProfile() {   const [user, setUser] = useState(null);    useEffect(() => {     fetch('https://jsonplaceholder.typicode.com/users/1')       .then(res => res.json())       .then(data => setUser(data));   }, []); // run only once when component mounts    return user ? <h1>{user.name}</h1> : <p>Loading...</p>; }`
+```
+import { useEffect, useState } from 'react';  
+function UserProfile() {   
+const [user, setUser] = useState(null);    
+useEffect(() => {     fetch('https://jsonplaceholder.typicode.com/users/1')       .then(res => res.json()).then(data => setUser(data));   }, []); // run only once when component mounts    
+return user ? <h1>{user.name}</h1> : <p>Loading...</p>; }
+```
 
 ### 📌 Why `[]`?
 
-- An empty dependency array (`[]`) makes it run **only once** (on mount), like `componentDidMount`.
+- An empty dependency array (`[]`) makes it run **only once** (on mount), like `componentDidMount`
 
 ## ✅ `useEffect` Dependency Array Cheat Sheet
 
@@ -442,12 +471,12 @@ Parent
 ---
 ## 🔹 `useRef` vs `useState`
 
-|`useState`|`useRef`|
-|---|---|
-|Triggers re-render on update|❌ No re-render|
-|Used for UI-related state|Used for storing values or references|
-|React watches for changes|React ignores `.current` changes|
-|Shows updates on screen|Hidden from UI|
+| `useState`                   | `useRef`                              |
+| ---------------------------- | ------------------------------------- |
+| Triggers re-render on update | ❌ No re-render                        |
+| Used for UI-related state    | Used for storing values or references |
+| React watches for changes    | React ignores `.current` changes      |
+| Shows updates on screen      | Hidden from UI                        |
 ## ==🔍 What is Context?==
 
 React **Context** is a way to **share values (data/state)** between components **without passing props manually at every level**.
@@ -471,7 +500,10 @@ To avoid **prop drilling** — when you pass data through many intermediate comp
 
 ### 1. **Create a Context**
 
-`import { createContext } from 'react'; export const MyContext = createContext();`
+```
+import { createContext } from 'react'; 
+export const MyContext = createContext();
+```
 
 ---
 ### 2. **Provide the Context (at top level)**
@@ -634,7 +666,37 @@ To avoid **prop drilling** — when you pass data through many intermediate comp
 ## ✅ Example Use Case
 
 
-`const Child = React.memo(({ onClick }) => {   console.log("👶 Child rendered");   return <button onClick={onClick}>Click</button>; });  function Parent() {   const [count, setCount] = useState(0);    const handleClick = useCallback(() => {     console.log("Clicked!");   }, []);    return (     <>       <Child onClick={handleClick} />       <button onClick={() => setCount(c => c + 1)}>Update Parent</button>     </>   ); }`
+```
+import React, { useState, useCallback } from "react";
+
+const Child = React.memo(({ onClick }) => {
+  console.log("👶 Child rendered");
+  return <button onClick={onClick}>Click Child</button>;
+});
+
+function Parent() {
+  const [count, setCount] = useState(0);
+
+  const handleClick = useCallback(() => {
+    console.log("Clicked!");
+  }, []);
+
+  return (
+    <>
+      <p>Parent count: {count}</p>
+
+      <Child onClick={handleClick} />
+
+      <button onClick={() => setCount(c => c + 1)}>
+        Update Parent
+      </button>
+    </>
+  );
+}
+
+export default Parent;
+
+```
 
 ### 💡 Why this works:
 

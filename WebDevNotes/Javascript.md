@@ -27,6 +27,222 @@
 > **Microtasks** (like Promises) have higher priority and run before **macrotasks** (like setTimeout).
 
 ## ==JS Working-==
+## Step 1: Call Stack (the only place code runs)
+
+When you write:
+
+`console.log("A"); console.log("B");`
+
+JS does:
+
+1. Put `console.log("A")` on the stack → run it → remove it
+    
+2. Put `console.log("B")` on the stack → run it → remove it
+    
+
+That’s it. Simple.
+
+If the call stack is busy, **nothing else can run**.
+
+---
+
+## Step 2: The problem with slow things
+
+Now imagine this:
+
+`fetch("data-from-internet"); console.log("Done");`
+
+Fetching data can take seconds.
+
+If JavaScript waited for it:
+
+- the page would freeze
+    
+- buttons wouldn’t click
+    
+- browser would look dead
+    
+
+So JavaScript says:
+
+> “I refuse to wait. Someone else handle this.”
+
+---
+
+## Step 3: Enter Web APIs (helpers, not JS)
+
+The **browser** provides helpers called **Web APIs**.
+
+Web APIs handle:
+
+- timers
+    
+- network
+    
+- events
+    
+
+Examples:
+
+- `setTimeout`
+    
+- `fetch`
+    
+- click events
+    
+
+Important:  
+👉 **Web APIs do NOT run your JavaScript code**  
+👉 They only _wait_ and _notify_
+
+---
+
+## Step 4: What happens when JS sees async code
+
+Example:
+
+`setTimeout(() => {   console.log("Hello"); }, 1000);  console.log("World");`
+
+What JS does:
+
+1. Sees `setTimeout`
+    
+2. Hands timer to **Web API**
+    
+3. Immediately continues
+    
+4. Prints `"World"`
+    
+
+So output so far:
+
+`World`
+
+The callback is **NOT executed yet**.
+
+---
+
+## Step 5: Where does the callback go after waiting?
+
+After 1 second, Web API finishes waiting.
+
+Now it asks:
+
+> “Where do I put this callback?”
+
+Answer: **a queue**.
+
+But there are **two different queues**.
+
+---
+
+## Step 6: Two queues (this is the core confusion)
+
+### Queue 1: Microtask Queue (HIGH priority)
+
+This queue is for:
+
+- Promise callbacks
+    
+- `then`
+    
+- `catch`
+    
+- `async/await`
+    
+
+Example:
+
+`Promise.resolve().then(() => console.log("Promise"));`
+
+---
+
+### Queue 2: Macrotask Queue (LOW priority)
+
+This queue is for:
+
+- `setTimeout`
+    
+- `setInterval`
+    
+- DOM events
+    
+
+Example:
+
+`setTimeout(() => console.log("Timeout"), 0);`
+
+---
+
+## Step 7: Important rule (memorize this)
+
+**Async does NOT decide the queue.  
+The API decides the queue.**
+
+- Promise → **Microtask queue**
+    
+- Timer / event → **Macrotask queue**
+    
+
+---
+## Step 8: Event Loop (the traffic policeman)
+
+The **event loop** constantly asks one question:
+
+> “Is the call stack empty?”
+
+If **NO** → wait  
+If **YES** → do this:
+
+1. Run **ALL microtasks**
+    
+2. Then run **ONE macrotask**
+    
+3. Repeat forever
+    
+
+---
+
+## Step 9: Let’s see everything together (slow)
+
+```
+`console.log("Start");  
+setTimeout(() => console.log("Timeout"), 0);  
+Promise.resolve().then(() => console.log("Promise"));  
+console.log("End");`
+```
+
+### Step-by-step:
+
+### 1️⃣ Call stack runs sync code
+
+`Start End`
+
+### 2️⃣ Web APIs finish
+
+- Promise callback → microtask queue
+    
+- setTimeout callback → macrotask queue
+    
+
+### 3️⃣ Call stack is empty → event loop starts
+
+Event loop rule:
+
+- Microtasks first
+    
+- Then macrotasks
+    
+
+So output:
+
+`Promise Timeout`
+
+### Final output:
+
+`Start End Promise Timeout`
+
+Always. No exception.
 
 Your Code
    ↓
@@ -54,7 +270,11 @@ Closures can cause memory leaks if they unintentionally hold references to unuse
 
 ✅ Accessible **anywhere** in your script.
 
-`const name = "Ali";  function greet() {   console.log(name); // ✅ can access global variable }  greet(); console.log(name); // ✅ works here too`
+```
+const name = "Ali";  
+function greet() {   
+console.log(name); // ✅ can access global variable }  greet(); console.log(name); // ✅ works here too
+```
 
 ---
 
@@ -65,11 +285,21 @@ Closures can cause memory leaks if they unintentionally hold references to unuse
 ✅ Applies to `var`, `let`, and `const`.
 
 
-`function test() {   let age = 30;   console.log(age); // ✅ 30 }  test(); console.log(age); // ❌ Error: age is not defined`
+```
+function test() {
+let age = 30;   
+console.log(age); // ✅ 30 }
+test(); 
+console.log(age); // ❌ Error: age is not defined
+```
 
 🟡 `var` is also **function scoped**, not block scoped!
 
-`function demo() {   if (true) {     var x = 10;   }   console.log(x); // ✅ 10: var ignores blocks, but still inside function }`
+	```function demo() {
+	if (true) {
+	var x = 10;   }   
+	console.log(x); // ✅ 10: var ignores blocks, but still inside function 
+	}```
 
 ---
 
@@ -113,13 +343,17 @@ Closures can cause memory leaks if they unintentionally hold references to unuse
 |`var`|❌ Function-scoped only|Ignored `{}` blocks|
 |`let`|✅ Block-scoped|Respects `{}` blocks|
 
-`if (true) {   var a = 10;   let b = 20; }  console.log(a); // ✅ 10 console.log(b); // ❌ Error (block scoped)`
+```
+if (true) {   var a = 10;   let b = 20; }  
+console.log(a); // ✅ 10 
+console.log(b); // ❌ Error (block scoped)
+```
 
 ---
 
 ## 🔸 2. **Hoisting Difference**
 
-## What is **Hoisting**?
+## ==What is **Hoisting**?==
 	Hoisting means variable and function declarations are moved to the top of their scope during compilation.  
 	`var` is hoisted and initialized with `undefined`, so it can be accessed before its declaration.  
 	`let` and `const` are also hoisted, but not initialized — accessing them before the line causes a ReferenceError
@@ -136,7 +370,6 @@ Closures can cause memory leaks if they unintentionally hold references to unuse
 `console.log(x); // undefined var x = 5;  console.log(y); // ❌ ReferenceError let y = 10;`
 
 ---
-
 ## 🔸 3. **Re-declaration**
 
 |Keyword|Re-declaration in same scope?|
@@ -144,25 +377,35 @@ Closures can cause memory leaks if they unintentionally hold references to unuse
 |`var`|✅ Allowed|
 |`let`|❌ Not allowed|
 
-|Feature|`var`|`let`|
-|---|---|---|
-|Scope|Function|Block|
-|Hoisting|Yes (initialized to `undefined`)|Yes (TDZ applies)|
-|Can re-declare|✅ Yes|❌ No|
-|Global object (`window`)|✅ Yes|❌ No|
-|Safe to use?|❌ No (avoid)|✅ Yes|
-
+| Feature                  | `var`                            | `let`             |          |
+| ------------------------ | -------------------------------- | ----------------- | -------- |
+| Scope                    | Function                         | Block             |          |
+| Hoisting                 | Yes (initialized to `undefined`) | Yes (TDZ applies) |          |
+| Can re-declare           | ✅ Yes                            | ❌ No              |          |
+| Global object (`window`) | ✅ Yes                            | ❌ No              |          |
+| Safe to use?             | ❌ No (avoid)                     | ✅ Yes             |          |
+| Feature                  | var                              | let               | const    |
+| Scope                    | Function                         | Block             | Block    |
+| Hoisted                  | Yes                              | Yes               | Yes      |
+| Initialized on hoist     | Yes (`undefined`)                | No (TDZ)          | No (TDZ) |
+| Re-declaration           | Yes                              | No                | No       |
+| Reassignment             | Yes                              | Yes               | No       |
+| Global object binding    | Yes                              | No                | No       |
+| Recommended              | Never                            | Sometimes         | Default  |
 ### What's the difference between `null` and `undefined`?
 
 > `undefined` means a variable has been declared but not assigned a value — it's the default.  
 > `null` is an assignment value that represents "no value" or "empty" — and is set **intentionally**.
 
-# Operators
-## **Optional Chaining `?.` 
+# ==Operators==
+## ==**Optional Chaining `?.`== 
 
 Optional chaining (`?.`) allows safe access to deeply nested object properties without causing runtime errors if a property doesn't exist.
 
-`let user = {}; console.log(user?.name); // undefined, no error`
+```
+let user = {}; 
+console.log(user?.name); // undefined, no error
+```
 
 ## **Ternary Operator**
 
@@ -193,7 +436,7 @@ Shorthand for if-else.
 
 `const greet = () => {   console.log("Hello"); };  const add = (a, b) => a + b;`
 
-## What Is a Callback Function?
+## ==What Is a Callback Function?==
 
 > A **callback** is a function **passed as an argument** to another function, so it can be **called later**.
 
@@ -210,7 +453,7 @@ Shorthand for if-else.
 `greet("Ali", sayBye);`
 
 
-## `.map()` — Transform Items
+## ==`.map()` — Transform Items==
 
 > Used to create a **new array** by applying a **transformation** to each element.
 
@@ -230,20 +473,21 @@ Shorthand for if-else.
 - Return value becomes the new item
     
 
-## 🔍 `.filter()` — Select Items
+## ==🔍 `.filter()` — Select Items==
 
 > Used to create a **new array** by keeping only the elements that match a **condition**.
 
 ### 🔧 Syntax:
 
-
-`const filteredArray = array.filter((value, index, array) => {   return condition; // true to keep, false to discard });`
-
+```
+const filteredArray = array.filter((value, index, array) => { 
+return condition; // true to keep, false to discard });
+```
 ### ✅ Key Facts:
 
 - Returns a **subset** of the original
     
-- Only items that return `true` stay
+- Only items that return `true` or `false`
     
 - Doesn’t modify original
     
@@ -261,7 +505,7 @@ Shorthand for if-else.
 |Real Use|Extract keys, reshape data|Search, exclude, clean lists|
 
 
-# What Is **Lexical Scope**?
+# ==What Is **Lexical Scope**?==
 
 > **Lexical** means: "Based on the location in the source code."
 
@@ -269,6 +513,7 @@ Shorthand for if-else.
 
 > **Lexical scope** means **scope is determined by where the code is written**, not by how or where it is called.
 
+```
 `function outer() {
   const msg = "I'm in outer";
 
@@ -280,15 +525,17 @@ Shorthand for if-else.
 }
 
 const fn = outer(); // fn = inner, defined inside outer
-fn(); // ✅ Prints: "I'm in outer"`
+fn(); // ✅ Prints: "I'm in outer"
+```
 
-## What Is a Closure?
+## ==What Is a Closure?==
 
 > A **closure** is a function that **remembers** the variables from its **lexical scope**, even after the outer function has finished.
 
 ### 🔧 Closure Example:
 
-`function outer() {
+```
+function outer() {
   let count = 0;
 
   return function inner() {
@@ -300,7 +547,8 @@ fn(); // ✅ Prints: "I'm in outer"`
 const counter = outer(); // outer() runs and returns inner()
 counter(); // 1
 counter(); // 2
-counter(); // 3`
+counter(); // 3
+```
 
 # Asynchronous JavaScript (Async JS)
 
@@ -318,10 +566,11 @@ counter(); // 3`
     
 7. ✅ **Error Handling in async**
    
-### What is Asynchronous JS
+### ==What is Asynchronous JS==
+
 Asynchronous JavaScript allows your program to start a task that might take a long time (like fetching data from the internet) and continue running other parts of your code **without waiting** for that long task to complete.
 
-## `setTimeout(callback, delay)`
+## 🔁 1. `setTimeout(callback, delay)`
 
 > Executes the `callback` function **once**, after the specified `delay` (in milliseconds).
 
@@ -351,7 +600,14 @@ Asynchronous JavaScript allows your program to start a task that might take a lo
 ### 🔧 Example:
 
 
-`let count = 0;  const intervalId = setInterval(() => {   count++;   console.log("Count:", count);    if (count === 5) {     clearInterval(intervalId); // stop after 5 runs   } }, 1000);`
+```
+let count = 0;  
+const intervalId = setInterval(() => {
+count++;   
+console.log("Count:", count);    
+if (count === 5) {     
+clearInterval(intervalId); // stop after 5 runs   } }, 1000);
+```
 
 🟢 Prints:
 
@@ -361,7 +617,8 @@ Asynchronous JavaScript allows your program to start a task that might take a lo
 
 A **Promise** is a JavaScript object that represents a value that may **not be available yet**, but will be resolved **in the future** (or fail).
 
-`function downloadFile(fileName) {
+```
+function downloadFile(fileName) {
   return new Promise((resolve, reject) => {
     setTimeout(() => {
       if (fileName) {
@@ -375,9 +632,10 @@ A **Promise** is a JavaScript object that represents a value that may **not be a
 
 downloadFile("resume.pdf")
   .then(result => console.log(result))
-  .catch(err => console.log(err));`
+  .catch(err => console.log(err));
+```
 
-# Async Await-
+# ==Async Await-==
 
  ### What Does `async` Do?
 
@@ -386,17 +644,27 @@ downloadFile("resume.pdf")
 - Automatically returns a **Promise**.
 
 
-`async function f() {   return 10; } // Equivalent to: function f() {   return Promise.resolve(10); }`
+```
+async function f() {   
+return 10; } 
+// Equivalent to: 
+function f() {
+   return Promise.resolve(10); 
+   }
+```
 
 ---
-
 ### 🔹 What Does `await` Do?
 
 - Pauses the `async` function until the **Promise resolves**.
     
 - Can only be used **inside `async` functions** (except top-level `await` in modules or Node 14+).
 
-`async function getData() {   const res = await fetch('https://api.com');   const data = await res.json(); }`
+```
+async function getData() {   
+const res = await fetch('https://api.com');   
+const data = await res.json(); }
+```
 
 
 ## **Immutability & Pure Functions**
@@ -406,10 +674,15 @@ downloadFile("resume.pdf")
 > Data **cannot be changed** after creation.
 
 
-`const arr = [1, 2]; const newArr = [...arr, 3]; // ✅ Immutable approach`
+```
+const arr = [1, 2]; 
+const newArr = [...arr, 3]; // ✅ Immutable approach
+```
 
 
-`arr.push(3); // ❌ Mutates original`
+```
+arr.push(3); // ❌ Mutates original
+```
 
 ### 🔹 Why It Matters:
 
@@ -427,9 +700,7 @@ downloadFile("resume.pdf")
     
 2. **Has no side effects**
 
-
 ---
-
 ## 📌 Characteristics of Pure Functions
 
 |Property|Pure Function|
@@ -467,7 +738,7 @@ There are two types:
 - 🟢 **Loosely Coupled** – code pieces are **independent** and interact via **interfaces or contracts**
   
 
-## ✅ What is Debouncing?
+## ✅ What is Debouching?
 
 > **Debounce** limits how often a function is called by waiting until **after** a series of rapid events has stopped.
 
@@ -492,7 +763,7 @@ function debounce(fn, delay) {
   };
 }
 ```
-## What is Throttling?
+## ==What is Throttling?==
 
 > **Throttle** limits a function to run at most **once every X milliseconds**, even if it’s triggered many times.
 
@@ -500,7 +771,41 @@ function debounce(fn, delay) {
     
 - Useful for **scroll**, **mousemove**, **resize**, etc.
   
+## **==Currying
+==**
+==Currying means breaking a function that takes many arguments into multiple functions that take one argument at a time.==
+## Start from normal functions (baseline)
 
+```
+function add(a, b) {   
+return a + b; }  
+add(2, 3); // 5
+```
+
+Two arguments. One call. Boring. Predictable.
+
+---
+## Curried version
+
+```
+function add(a) {   
+return function (b) {     
+return a + b;   }; }  
+add(2)(3); // 5
+```
+
+Same result. Different structure.
+
+What changed?
+
+- Instead of **one function with two args**
+    
+- You now have **two functions with one arg each**
+    
+
+That transformation is **currying**.
+
+---
 
 
 

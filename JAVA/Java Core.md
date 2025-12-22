@@ -413,7 +413,7 @@ A **method** (sometimes called a function in other languages) is a **block of co
 
 ---
 
-## 🔹 7. `super` Keyword
+## 🔹 7. ==`super` Keyword==
 
 Three main uses:
 
@@ -668,7 +668,7 @@ When we open Microsoft Word, it becomes a process in the operating system.
 
 > **_Thread_**
 
-A thread is the smallest unit of execution within a process. A process can have multiple threads, which share the same resources but can run independently.
+==A thread is the smallest unit of execution within a process.== A process can have multiple threads, which share the same resources but can run independently.
 
 ==A web browser like Google Chrome might use multiple threads for different tabs, with each tab running as a separate thread.==
 
@@ -680,9 +680,9 @@ _Example: We are browsing the internet while listening to music and downloading 
 
 Multitasking utilizes the capabilities of a CPU and its cores. When an operating system performs multitasking, it can assign different tasks to different cores. This is more efficient than assigning all tasks to a single core.
 
-> **_Multithreading_**
+> **==_Multithreading_==**
 
-Multithreading refers to the ability to execute multiple threads within a single process concurrently.
+Multithreading refers to the ability to ==execute multiple threads within a single process concurrently.==
 
 A web browser can use multithreading by having separate threads for rendering the page, running JavaScript, and managing user inputs. This makes the browser more responsive and efficient.
 
@@ -738,7 +738,7 @@ public class Test {
 
 To create a new thread in Java, you can either extend the Thread class or implement the Runnable interface.
 
-## Method 1: extend the Thread class
+## ==Method 1: extend the Thread class==
 
 1. A new class World is created that extends Thread.
 2. The run method is overridden to define the code that constitutes the new thread.
@@ -763,7 +763,7 @@ public class World extends Thread {
     }  
 }
 
-## Method 2: Implement Runnable interface
+## ==Method 2: Implement Runnable interface==
 
 1. A new class World is created that implements Runnable.
 2. The run method is overridden to define the code that constitutes the new thread.
@@ -800,6 +800,7 @@ The lifecycle of a thread in Java consists of several states, which a thread can
 - **Blocked/Waiting:** A thread is in this state when it is waiting for a resource or for another thread to perform an action.
 - **Terminated:** A thread is in this state when it has finished executing.
 
+```
 public class MyThread extends Thread{  
     @Override  
     public void run() {  
@@ -810,7 +811,9 @@ public class MyThread extends Thread{
             System.out.println(e);  
         }  
     }  
+```
   
+```
     public static void main(String[] args) throws InterruptedException {  
         MyThread t1 = new MyThread();  
         System.out.println(t1.getState()); // NEW  
@@ -822,6 +825,7 @@ public class MyThread extends Thread{
         System.out.println(t1.getState()); // TERMINATED  
     }  
 }
+```
 
 ## ==Thread methods==
 
@@ -831,6 +835,7 @@ public class MyThread extends Thread{
 4. **join( ):** ==Waits for this thread to die==. When one thread calls the `join()` method of another thread, it pauses the execution of the current thread until the thread being joined has completed its execution.
 5. **setPriority(int newPriority):** Changes the priority of the thread. The priority is a value between `Thread.MIN_PRIORITY` (1) and `Thread.MAX_PRIORITY` (10).
 
+```
 public class MyThread extends Thread {  
     public MyThread(String name) {  
         super(name);  
@@ -851,7 +856,9 @@ public class MyThread extends Thread {
             }  
         }  
     }  
+```
   
+ 
     public static void main(String[] args) throws InterruptedException {  
   
         MyThread l = new MyThread("Low Priority Thread");  
@@ -888,7 +895,7 @@ public class MyThread extends Thread {
     }  
 }
 
-**8. Thread.==setDaemon==(boolean)**: Marks the thread as either a daemon thread or a user thread. When the JVM exits, all daemon threads are terminated.
+**8. ==Thread==.==setDaemon==(boolean)**: Marks the thread as either a daemon thread or a user thread. When the JVM exits, all daemon threads are terminated.
 
 public class MyThread extends Thread {  
     @Override  
@@ -1717,7 +1724,7 @@ Runs multiple tasks → returns result of **first completed** task → cancels t
 | `isTerminated()`      | Check if all tasks finished           |
 | `awaitTermination()`  | Wait for all tasks after shutdown     |
 
-# 📒 JDBC – Extended Notes
+# 📒 ==JDBC==
 
 ---
 
@@ -1807,7 +1814,28 @@ JDBC defines **4 types of drivers**:
     
 6. Close Connection
     
+```import java.sql.Connection;
+import java.sql.DriverManager;
 
+public class JdbcDemo {
+    public static void main(String[] args) {
+        try {
+            Connection con = DriverManager.getConnection(
+                "jdbc:mysql://localhost:3306/testdb",
+                "root",
+                "root"
+            );
+
+            System.out.println("Connection successful");
+
+            con.close();
+        } catch (Exception e) {
+            e.printStackTrace();
+        }
+    }
+}
+
+```
 ---
 
 ### 🔹 Q3. Difference between `Statement` and `PreparedStatement`?
@@ -1819,7 +1847,8 @@ JDBC defines **4 types of drivers**:
 
 Example:
 
-`Statement:       "SELECT * FROM users WHERE id = " + id; PreparedStatement: "SELECT * FROM users WHERE id = ?"`
+`Statement:       "SELECT * FROM users WHERE id = " + id; 
+PreparedStatement: "SELECT * FROM users WHERE id = ?"`
 
 ---
 
@@ -1856,7 +1885,9 @@ Example:
 
 👉
 
-`con.setAutoCommit(false);   // execute queries con.commit();   // save con.rollback(); // undo if failure`
+`con.setAutoCommit(false);   // execute queries 
+con.commit();   // save 
+con.rollback(); // undo if failure`
 
 ---
 

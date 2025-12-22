@@ -52,10 +52,6 @@ Most common use is to frontend talk to its backend.
 
 ### **Installation**
 
-bash
-
-Copy code
-
 `npm install zod`
 
 #### 1. **Creating a Schema**

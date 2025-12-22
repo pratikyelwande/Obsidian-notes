@@ -2,7 +2,7 @@ https://github.com/aman0046/LastMinuteRevision-OOP
 
 ## Most Asked OOPS Interview Questions
 
-[](https://github.com/aman0046/LastMinuteRevision-OOP#most-asked-oops-interview-questions)
+[Interview Question Link](https://github.com/aman0046/LastMinuteRevision-OOP#most-asked-oops-interview-questions)
 
 ### 1: What is OBJECT-ORIENTED PROGRAMMING?
 
