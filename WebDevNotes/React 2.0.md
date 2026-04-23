@@ -42,13 +42,19 @@ React uses the `useEffect` hook to mimic lifecycle behavior.
 
 ### 🔹 Mount (componentDidMount)
 
-`useEffect(() => {   // Runs once after first render }, []);`
+```
+useEffect(() => {   // Runs once after first render }, []);
+```
 ### 🔹 Update (componentDidUpdate)
 
-`useEffect(() => {   // Runs when 'count' changes }, [count]);`
+```
+useEffect(() => {   // Runs when 'count' changes }, [count]);
+```
 ### 🔹 Unmount (componentWillUnmount)
 
-`useEffect(() => {   return () => {     // Cleanup logic   }; }, []);`
+```
+useEffect(() => {   return () => {     // Cleanup logic   }; }, []);
+```
 
 
 ## ==🔍 React Under the Hood – How It Really Works==
@@ -68,11 +74,15 @@ React **compiles** it (via Babel)to
 ⬇️  
 ⚙️ **V8 executes the plain JS**
 
-`const element = React.createElement('h1', null, 'Hello');`
+```
+const element = React.createElement('h1', null, 'Hello');
+```
 
 This returns a **plain JavaScript object** like:
 
-`{   type: 'h1',   props: {     children: 'Hello'   } }`
+```
+{   type: 'h1',   props: {     children: 'Hello'   } }
+```
 
 ## 2.What is the Virtual DOM?
 
@@ -141,17 +151,28 @@ Think of props like **function arguments**, but for components.
 
 ```
 const MovieCard = ({ title, rating, isAvailable }) => (
-   <div style={{ border: '1px solid #ccc', padding: '12px', margin: '10px' }}>     <h2>{title}</h2>     <p>Rating: {rating}/10</p>  
-  <p style={{ color: isAvailable ? 'green' : 'red' }}>  
-       {isAvailable ? 'Now Showing' : 'Coming Soon'}    
-   </p>   </div> ); 
+   <div>       
+   <h2>{title}</h2>     
+    <p>Rating: {rating}/10</p>  
+    <p style={{ color: isAvailable ? 'green' : 'red' }}>  
+    {isAvailable ? 'Now Showing' : 'Coming Soon'}    
+    </p>   
+   </div> ); 
    export default MovieCard;
 ```
 
 ### 🧩 `App.jsx`
 
 
-`import MovieCard from './MovieCard';  const App = () => (   <div>     <MovieCard title="Inception" rating={8.8} isAvailable={true} />     <MovieCard title="Interstellar" rating={8.6} isAvailable={false} />   </div> );  export default App;`
+```
+import MovieCard from './MovieCard';  
+const App = () => (   
+<div>     
+<MovieCard title="Inception" rating={8.8} isAvailable={true} />     
+<MovieCard title="Interstellar" rating={8.6} isAvailable={false} />   
+</div> );  
+export default App;
+```
 
 ---
 
@@ -376,7 +397,9 @@ return () => {
 import { useEffect, useState } from 'react';  
 function UserProfile() {   
 const [user, setUser] = useState(null);    
-useEffect(() => {     fetch('https://jsonplaceholder.typicode.com/users/1')       .then(res => res.json()).then(data => setUser(data));   }, []); // run only once when component mounts    
+useEffect(() => {fetch('https://jsonplaceholder.typicode.com/users/1')       .then(res => res.json())
+.then(data => setUser(data));   }, []); 
+// run only once when component mounts    
 return user ? <h1>{user.name}</h1> : <p>Loading...</p>; }
 ```
 
@@ -438,7 +461,9 @@ return user ? <h1>{user.name}</h1> : <p>Loading...</p>; }
 ---
 ## 🔹 Syntax
 
-`const myRef = useRef(initialValue);`
+```
+const myRef = useRef(initialValue);
+```
 
 - `myRef.current` → The actual value or reference (you can read/write this)
 
@@ -458,7 +483,11 @@ return user ? <h1>{user.name}</h1> : <p>Loading...</p>; }
 
 ### 1. Accessing DOM Element
 
-`const inputRef = useRef();  <input ref={inputRef} /> <button onClick={() => inputRef.current.focus()}>Focus</button>`
+```
+const inputRef = useRef();  
+<input ref={inputRef} /> 
+<button onClick={() => inputRef.current.focus()}>Focus</button>
+```
 
 ### 2. Store Previous State Value
 
@@ -513,7 +542,11 @@ export const MyContext = createContext();
 ---
 ### 3. **Consume the Context (anywhere)**
 
-`import { useContext } from 'react'; import { MyContext } from './MyContextFile';  const value = useContext(MyContext);`
+```
+import { useContext } from 'react'; 
+import { MyContext } from './MyContextFile';  
+const value = useContext(MyContext);
+```
 
 
 # 📒 React `useReducer` – 
@@ -536,7 +569,16 @@ export const MyContext = createContext();
 ### 🧠 Reducer Syntax
 
 
-`function reducer(state, action) {   if (action.type === 'INCREMENT') {     return state + 1;   }   if (action.type === 'DECREMENT') {     return state - 1;   }   return state; }`
+```
+function reducer(state, action) {   
+if (action.type === 'INCREMENT') {     
+return state + 1;   
+}   
+if (action.type === 'DECREMENT') {     
+return state - 1;   
+}   
+return state; }
+```
 
 ---
 
@@ -571,7 +613,20 @@ export const MyContext = createContext();
 ---
 ### 🔁 Example: Counter
 
-`function reducer(state, action) {   if (action.type === 'INCREMENT') return state + 1;   if (action.type === 'DECREMENT') return state - 1;   return state; }  function Counter() {   const [count, dispatch] = useReducer(reducer, 0);    return (     <div>       <h2>Count: {count}</h2>       <button onClick={() => dispatch({ type: 'INCREMENT' })}>+</button>       <button onClick={() => dispatch({ type: 'DECREMENT' })}>-</button>     </div>   ); }`
+```
+function reducer(state, action) {   
+if (action.type === 'INCREMENT') return state + 1;   
+if (action.type === 'DECREMENT') return state - 1;   
+return state; }  
+function Counter() {   
+const [count, dispatch] = useReducer(reducer, 0);    
+return (     
+<div>       
+<h2>Count: {count}</h2>       
+<button onClick={() => dispatch({ type: 'INCREMENT' })}>+</button>       
+<button onClick={() => dispatch({ type: 'DECREMENT' })}>-</button>     
+</div>   ); }
+```
 
 ## ==✅ What is `useMemo`?==
 
@@ -838,14 +893,39 @@ Install Redux and React-Redux:
 
 📁 `index.js` or `main.jsx`
 
-`import React from 'react'; import ReactDOM from 'react-dom'; import App from './App'; import { Provider } from 'react-redux'; import { store } from './app/store';  ReactDOM.render(   <Provider store={store}>     <App />   </Provider>,   document.getElementById('root') );`
+```
+import React from 'react'; 
+import ReactDOM from 'react-dom'; 
+import App from './App'; 
+import { Provider } from 'react-redux'; 
+import { store } from './app/store';  
+ReactDOM.render(   
+<Provider store={store}> 
+    <App />   
+</Provider>,document.getElementById('root') 
+);
+```
 
 ---
 ### Step 4: Use Redux in Components
 
 📁 `Counter.jsx`
 
-`import React from 'react'; import { useSelector, useDispatch } from 'react-redux'; import { increment, decrement, incrementByAmount } from './features/counter/counterSlice';  const Counter = () => {   const count = useSelector(state => state.counter.value);   const dispatch = useDispatch();    return (     <div>       <h1>Count: {count}</h1>       <button onClick={() => dispatch(increment())}> + </button>       <button onClick={() => dispatch(decrement())}> - </button>       <button onClick={() => dispatch(incrementByAmount(5))}> +5 </button>     </div>   ); };  export default Counter;`
+```
+import React from 'react'; 
+import { useSelector, useDispatch } from 'react-redux'; 
+import { increment, decrement, incrementByAmount } from './features/counter/counterSlice';  
+const Counter = () => {   
+const count = useSelector(state => state.counter.value); 
+  const dispatch = useDispatch();    
+  return (     <div>       
+  <h1>Count: {count}</h1>      
+   <button onClick={() => dispatch(increment())}> + </button>       
+   <button onClick={() => dispatch(decrement())}> - </button> 
+   <button onClick={() => dispatch(incrementByAmount(5))}> +5 </button>     
+   </div>   ); };  
+   export default Counter;
+```
 
 ---
 ## 🧪 5. Behind the Scenes (How Redux Works Internally)

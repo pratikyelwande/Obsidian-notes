@@ -1,37 +1,17 @@
 ### **What is JavaScript?**
 
-> JavaScript is a high-level, interpreted programming language used to add interactivity to websites, running in the browser and on servers via Node.js.
+> JavaScript is a **high-level, interpreted programming language** used to add interactivity to websites, running in the browser and on servers via Node.js.
 
 ---
-
-### ✅ **Q2: How does JavaScript execute code?**
-
-> JavaScript uses a single-threaded **call stack** to execute synchronous code line-by-line.
-
----
-
-### ✅ **Q3: How does JavaScript handle asynchronous tasks?**
-
-> Asynchronous operations are handled by the **browser’s Web APIs**, and their callbacks are added to task queues once complete.
-
----
-
-### ✅ **Q4: What is the Event Loop?**
-
-> The **event loop** checks if the call stack is empty, and if so, moves tasks from **microtask** or **macrotask queues** into the stack for execution.
-
----
-
-### ✅ **Q5: What’s the difference between microtask and macrotask queues?**
-
-> **Microtasks** (like Promises) have higher priority and run before **macrotasks** (like setTimeout).
-
 ## ==JS Working-==
 ## Step 1: Call Stack (the only place code runs)
 
 When you write:
 
-`console.log("A"); console.log("B");`
+```
+console.log("A"); 
+console.log("B");
+```
 
 JS does:
 
@@ -50,7 +30,10 @@ If the call stack is busy, **nothing else can run**.
 
 Now imagine this:
 
-`fetch("data-from-internet"); console.log("Done");`
+```
+fetch("data-from-internet"); 
+console.log("Done");
+```
 
 Fetching data can take seconds.
 
@@ -101,7 +84,11 @@ Important:
 
 Example:
 
-`setTimeout(() => {   console.log("Hello"); }, 1000);  console.log("World");`
+```
+setTimeout(() => {   
+console.log("Hello"); }, 1000);  
+console.log("World");
+```
 
 What JS does:
 
@@ -206,7 +193,7 @@ If **YES** → do this:
 ## Step 9: Let’s see everything together (slow)
 
 ```
-`console.log("Start");  
+console.log("Start");  
 setTimeout(() => console.log("Timeout"), 0);  
 Promise.resolve().then(() => console.log("Promise"));  
 console.log("End");`
@@ -236,13 +223,23 @@ Event loop rule:
 
 So output:
 
-`Promise Timeout`
+```
+Promise
+Timeout
+```
 
 ### Final output:
 
-`Start End Promise Timeout`
+```
+Start 
+End 
+Promise 
+Timeout
+```
 
 Always. No exception.
+
+---
 
 Your Code
    ↓
@@ -259,6 +256,29 @@ If async → send to:
       → Then Macrotask
 
 > The event loop allows JavaScript to handle asynchronous operations in a single-threaded environment. It runs sync code first, and then processes callbacks from queues when the call stack is empty. Promises (microtasks) run before timeouts (macrotasks).
+
+### ✅ **Q2: How does JavaScript execute code?**
+
+> JavaScript uses a single-threaded **call stack** to execute synchronous code line-by-line.
+
+---
+
+### ✅ **Q3: How does JavaScript handle asynchronous tasks?**
+
+> Asynchronous operations are handled by the **browser’s Web APIs**, and their callbacks are added to task queues once complete.
+
+---
+
+### ✅ **Q4: What is the Event Loop?**
+
+> The **event loop** checks if the call stack is empty, and if so, moves tasks from **microtask** or **macrotask queues** into the stack for execution.
+
+---
+
+### ✅ **Q5: What’s the difference between microtask and macrotask queues?**
+
+> **Microtasks** (like Promises) have higher priority and run before **macrotasks** (like setTimeout).
+
 ## ==Memory Management of JS-==
 
 JavaScript handles memory automatically using garbage collection, primarily with the mark-and-sweep algorithm.  
@@ -295,11 +315,13 @@ console.log(age); // ❌ Error: age is not defined
 
 🟡 `var` is also **function scoped**, not block scoped!
 
-	```function demo() {
+```
+	function demo() {
 	if (true) {
 	var x = 10;   }   
 	console.log(x); // ✅ 10: var ignores blocks, but still inside function 
-	}```
+	}
+```
 
 ---
 
@@ -310,11 +332,22 @@ console.log(age); // ❌ Error: age is not defined
 ✅ Blocks: `if`, `for`, `{}` — anything with `{}`
 
 
-`if (true) {   let x = 1;   const y = 2;   console.log(x, y); // ✅ inside block }  console.log(x); // ❌ Error console.log(y); // ❌ Error`
+```
+if (true) {   
+let x = 1;   
+const y = 2;   
+console.log(x, y); // ✅ inside block }  
+console.log(x); // ❌ Error 
+console.log(y); // ❌ Error
+```
 
 🛑 But `var` doesn’t respect block scope:
 
-`if (true) {   var z = 3; } console.log(z); // ✅ 3 — var leaked out`
+```
+if (true) {   
+var z = 3; } 
+console.log(z); // ✅ 3 — var leaked out
+```
 
 ---
 
@@ -335,7 +368,7 @@ console.log(age); // ❌ Error: age is not defined
 > Block scope variables (`let`, `const`) are only accessible inside `{}` where they’re declared.  
 > `var` ignores blocks and only respects function scope.
 
-## LET & VAR
+## ==LET & VAR==
 ## 1. **Scope Difference**
 
 |Keyword|Scope Type|Example|
@@ -344,18 +377,17 @@ console.log(age); // ❌ Error: age is not defined
 |`let`|✅ Block-scoped|Respects `{}` blocks|
 
 ```
-if (true) {   var a = 10;   let b = 20; }  
+if (true) {   
+var a = 10;   
+let b = 20; }  
 console.log(a); // ✅ 10 
 console.log(b); // ❌ Error (block scoped)
 ```
 
 ---
-
-## 🔸 2. **Hoisting Difference**
-
 ## ==What is **Hoisting**?==
 	Hoisting means variable and function declarations are moved to the top of their scope during compilation.  
-	`var` is hoisted and initialized with `undefined`, so it can be accessed before its declaration.  
+	`var` is hoisted and initialized with `undefined`, so it can be accessed before its declar ation.  
 	`let` and `const` are also hoisted, but not initialized — accessing them before the line causes a ReferenceError
 
 - **Both `var` and `let` are hoisted**, but they behave **very differently**.
@@ -367,7 +399,12 @@ console.log(b); // ❌ Error (block scoped)
 
 ### 🧪 Example:
 
-`console.log(x); // undefined var x = 5;  console.log(y); // ❌ ReferenceError let y = 10;`
+```
+console.log(x); // undefined 
+var x = 5;  
+console.log(y); // ❌ ReferenceError 
+let y = 10;
+```
 
 ---
 ## 🔸 3. **Re-declaration**
@@ -377,21 +414,21 @@ console.log(b); // ❌ Error (block scoped)
 |`var`|✅ Allowed|
 |`let`|❌ Not allowed|
 
-| Feature                  | `var`                            | `let`             |          |
-| ------------------------ | -------------------------------- | ----------------- | -------- |
-| Scope                    | Function                         | Block             |          |
-| Hoisting                 | Yes (initialized to `undefined`) | Yes (TDZ applies) |          |
-| Can re-declare           | ✅ Yes                            | ❌ No              |          |
-| Global object (`window`) | ✅ Yes                            | ❌ No              |          |
-| Safe to use?             | ❌ No (avoid)                     | ✅ Yes             |          |
-| Feature                  | var                              | let               | const    |
-| Scope                    | Function                         | Block             | Block    |
-| Hoisted                  | Yes                              | Yes               | Yes      |
-| Initialized on hoist     | Yes (`undefined`)                | No (TDZ)          | No (TDZ) |
-| Re-declaration           | Yes                              | No                | No       |
-| Reassignment             | Yes                              | Yes               | No       |
-| Global object binding    | Yes                              | No                | No       |
-| Recommended              | Never                            | Sometimes         | Default  |
+| Feature                  | `var`                            | `let`             | const             |
+| ------------------------ | -------------------------------- | ----------------- | ----------------- |
+| Scope                    | Function                         | Block             |                   |
+| Hoisting                 | Yes (initialized to `undefined`) | Yes (TDZ applies) | Yes (TDZ applies) |
+| Can re-declare           | ✅ Yes                            | ❌ No              | No                |
+| Global object (`window`) | ✅ Yes                            | ❌ No              |                   |
+| Safe to use?             | ❌ No (avoid)                     | ✅ Yes             | Yes               |
+| Feature                  | var                              | let               | const             |
+| Scope                    | Function                         | Block             | Block             |
+| Hoisted                  | Yes                              | Yes               | Yes               |
+| Initialized on hoist     | Yes (`undefined`)                | No (TDZ)          | No (TDZ)          |
+| Re-declaration           | Yes                              | No                | No                |
+| Reassignment             | Yes                              | Yes               | No                |
+| Global object binding    | Yes                              | No                | No                |
+| Recommended              | Never                            | Sometimes         | Default           |
 ### What's the difference between `null` and `undefined`?
 
 > `undefined` means a variable has been declared but not assigned a value — it's the default.  
@@ -407,7 +444,7 @@ let user = {};
 console.log(user?.name); // undefined, no error
 ```
 
-## **Ternary Operator**
+## ==**Ternary Operator**==
 
 Shorthand for if-else.
 
@@ -429,7 +466,11 @@ Shorthand for if-else.
 
 > To handle multiple arguments
 
-`function sum(...numbers) {   return numbers.reduce((a, b) => a + b); }  sum(1, 2, 3, 4); // 10`
+```
+function sum(...numbers) {   
+return numbers.reduce((a, b) => a + b); }  
+sum(1, 2, 3, 4); // 10
+```
 
 ## **Arrow Functions (ES6)**
 
@@ -441,16 +482,21 @@ Shorthand for if-else.
 > A **callback** is a function **passed as an argument** to another function, so it can be **called later**.
 
 
-`function greet(name, callback) {`
-  `console.log("Hello " + name);`
-  `callback();`
-`}`
+```
+function greet(name, callback) {
+  console.log("Hello " + name);
+  callback();
+}
+```
 
-`function sayBye() {`
-  `console.log("Goodbye");`
-`}`
-
-`greet("Ali", sayBye);`
+```
+function sayBye() {`
+  console.log("Goodbye");
+}
+```
+```
+greet("Ali", sayBye);
+```
 
 
 ## ==`.map()` — Transform Items==
@@ -460,7 +506,7 @@ Shorthand for if-else.
 ### 🔧 Syntax:
 
 
-`const newArray = array.map((value, index, array) => {   return transformedValue; });`
+```const newArray = array.map((value, index, array) => {   return transformedValue; });```
 
 ### ✅ Key Facts:
 
@@ -503,8 +549,28 @@ return condition; // true to keep, false to discard });
 |Callback Must|Return new value|Return `true` or `false`|
 |Modifies?|❌ No (pure function)|❌ No|
 |Real Use|Extract keys, reshape data|Search, exclude, clean lists|
+## ==`reduce()`==
+### Purpose
 
+Combine all elements into **one value**.
+### Rule
 
+- Result can be any type
+    
+- Uses an accumulator (`acc`)
+    
+- Requires an initial value for safety
+### Syntax
+
+```
+array.reduce((acc, curr, index, array) => newAcc, initialValue)
+```
+### Example: sum
+
+```
+const nums = [1, 2, 3]; 
+const sum = nums.reduce((acc, curr) => acc + curr, 0); // 6
+```
 # ==What Is **Lexical Scope**?==
 
 > **Lexical** means: "Based on the location in the source code."
@@ -514,7 +580,7 @@ return condition; // true to keep, false to discard });
 > **Lexical scope** means **scope is determined by where the code is written**, not by how or where it is called.
 
 ```
-`function outer() {
+function outer() {
   const msg = "I'm in outer";
 
   function inner() {
@@ -530,7 +596,7 @@ fn(); // ✅ Prints: "I'm in outer"
 
 ## ==What Is a Closure?==
 
-> A **closure** is a function that **remembers** the variables from its **lexical scope**, even after the outer function has finished.
+> A **closure** is a function that ==**remembers** the variables== from its **lexical scope**, even after the outer function has finished.
 
 ### 🔧 Closure Example:
 
@@ -573,14 +639,10 @@ Asynchronous JavaScript allows your program to start a task that might take a lo
 ## 🔁 1. `setTimeout(callback, delay)`
 
 > Executes the `callback` function **once**, after the specified `delay` (in milliseconds).
-
 ### 🔧 Syntax:
 
-
 `setTimeout(() => {   console.log("Hello after 2 seconds"); }, 2000);`
-
 ### ✅ Output:
-
 
 `Hello after 2 seconds`
 
@@ -634,6 +696,351 @@ downloadFile("resume.pdf")
   .then(result => console.log(result))
   .catch(err => console.log(err));
 ```
+
+## Creating a Promise
+
+### Syntax
+
+```
+new Promise((resolve, reject) => {
+  // async work
+});
+
+```
+
+### Example
+
+```
+function getNumber() {
+  return new Promise((resolve, reject) => {
+    setTimeout(() => {
+      resolve(10);
+    }, 1000);
+  });
+}
+
+```
+
+---
+
+## 3. Consuming a Promise (`then`, `catch`, `finally`)
+
+### `then` – success handler
+
+```
+getNumber().then(result => {
+  console.log(result); // 10
+});
+```
+
+### `catch` – error handler
+
+```
+getNumber().catch(err => {
+  console.log(err);
+});
+
+```
+
+### `finally` – always runs
+
+```
+getNumber().finally(() => {
+  console.log("Done");
+});
+
+```
+
+---
+
+## 4. Promise Chaining (most important concept)
+
+### Rule
+
+> The value returned from `then()` goes to the next `then()`.
+
+### Example
+
+```
+getNumber()
+  .then(num => {
+    return num * 2;
+  })
+  .then(result => {
+    console.log(result); // 20
+  });
+
+```
+
+---
+
+## 5. Error Propagation
+
+### Example
+
+```
+getNumber()
+  .then(num => {
+    throw "Something went wrong";
+  })
+  .then(() => {
+    console.log("Will not run");
+  })
+  .catch(err => {
+    console.log(err); // Something went wrong
+  });
+
+```
+
+Errors move down the chain until caught.
+
+---
+
+## 6. Promise Always Runs Asynchronously
+
+### Example
+
+```
+console.log("Start");
+
+Promise.resolve("Done").then(res => {
+  console.log(res);
+});
+
+console.log("End");
+
+```
+
+### Output
+
+`Start End Done`
+
+---
+
+## 7. `Promise.all()`
+
+### Purpose
+
+Run multiple promises in parallel. All must succeed.
+
+### Example
+
+```
+Promise.all([
+  Promise.resolve(1),
+  Promise.resolve(2),
+  Promise.resolve(3)
+])
+.then(results => {
+  console.log(results); // [1, 2, 3]
+})
+.catch(err => {
+  console.log(err);
+});
+```
+### Failure case
+
+```
+Promise.all([
+  Promise.resolve(1),
+  Promise.reject("Error"),
+  Promise.resolve(3)
+])
+.catch(err => {
+  console.log(err); // Error
+});
+
+```
+
+---
+
+## 8. `Promise.allSettled()`
+
+### Purpose
+
+Get result of all promises, success or failure.
+
+### Example
+
+```
+Promise.allSettled([
+  Promise.resolve("A"),
+  Promise.reject("B"),
+  Promise.resolve("C")
+])
+.then(results => {
+  console.log(results);
+});
+
+```
+
+Output:
+
+```
+[
+  { status: "fulfilled", value: "A" },
+  { status: "rejected", reason: "B" },
+  { status: "fulfilled", value: "C" }
+]
+
+```
+
+---
+
+## 9. `Promise.race()`
+
+### Purpose
+
+First promise to settle wins (success or failure).
+
+### Example
+
+```
+Promise.race([
+  new Promise(res => setTimeout(() => res("Fast"), 500)),
+  new Promise(res => setTimeout(() => res("Slow"), 2000))
+])
+.then(result => {
+  console.log(result); // Fast
+});
+
+```
+
+---
+
+## 10. `Promise.any()`
+
+### Purpose
+
+First successful promise wins.
+
+### Example
+```
+Promise.race([
+  new Promise(res => setTimeout(() => res("Fast"), 500)),
+  new Promise(res => setTimeout(() => res("Slow"), 2000))
+])
+.then(result => {
+  console.log(result); // Fast
+});
+
+```
+
+---
+
+## 11. Common Mistakes
+
+### Forgetting to return
+
+`.then(() => {   fetchData(); // WRONG });`
+
+Correct:
+
+`.then(() => {   return fetchData(); });`
+
+## Eg
+
+```
+// Fake async task
+function task(name, time, shouldFail = false) {
+  return new Promise((resolve, reject) => {
+    setTimeout(() => {
+      if (shouldFail) {
+        reject(name + " failed");
+      } else {
+        resolve(name + " success");
+      }
+    }, time);
+  });
+}
+
+console.log("START");
+
+// ----------------------------------
+// 1. Basic Promise + then + catch + finally
+// ----------------------------------
+
+task("Task1", 1000)
+  .then(result => {
+    console.log(result);          // Task1 success
+    return "Next value";          // chaining
+  })
+  .then(value => {
+    console.log(value);           // Next value
+    throw "Manual error";         // error propagation
+  })
+  .catch(err => {
+    console.log("Caught:", err);  // Manual error
+  })
+  .finally(() => {
+    console.log("Task1 finished");
+  });
+
+// ----------------------------------
+// 2. Promise.all (all must succeed)
+// ----------------------------------
+
+Promise.all([
+  task("A", 1000),
+  task("B", 1500),
+  task("C", 500)
+])
+.then(results => {
+  console.log("ALL:", results);
+})
+.catch(err => {
+  console.log("ALL failed:", err);
+});
+
+// ----------------------------------
+// 3. Promise.allSettled (report all)
+// ----------------------------------
+
+Promise.allSettled([
+  task("D", 500),
+  task("E", 800, true),
+  task("F", 300)
+])
+.then(results => {
+  console.log("ALL SETTLED:", results);
+});
+
+// ----------------------------------
+// 4. Promise.race (first settled)
+// ----------------------------------
+
+Promise.race([
+  task("Fast", 400),
+  task("Slow", 2000)
+])
+.then(result => {
+  console.log("RACE winner:", result);
+})
+.catch(err => {
+  console.log("RACE error:", err);
+});
+
+// ----------------------------------
+// 5. Promise.any (first success)
+// ----------------------------------
+
+Promise.any([
+  task("X", 300, true),
+  task("Y", 600, true),
+  task("Z", 900)
+])
+.then(result => {
+  console.log("ANY success:", result);
+})
+.catch(err => {
+  console.log("ANY failed:", err.errors);
+});
+
+console.log("END");
+
+```
+
+---
 
 # ==Async Await-==
 
@@ -719,7 +1126,11 @@ arr.push(3); // ❌ Mutates original
 ### ✅ Pure Function
 
 
-`function add(a, b) {   return a + b; }`
+```
+function add(a, b) {
+   return a + b; 
+   }
+```
 
 - Input: `add(2, 3)` → Output: `5`
     
@@ -727,7 +1138,7 @@ arr.push(3); // ❌ Mutates original
     
 - Doesn’t touch outside world
   
-## What is **Coupling**?
+## ==What is **Coupling**?==
 
 > Coupling describes **how connected or dependent** one piece of code is on another.
 
@@ -806,6 +1217,140 @@ What changed?
 That transformation is **currying**.
 
 ---
+## ==CALL BIND APPLY==
 
+Functions in JavaScript do **not** have a fixed `this`.  
+`call`, `apply`, and `bind` exist to **explicitly control what `this` refers to at execution time**.
+
+---
+## `call()`
+
+Invokes a function **immediately**, explicitly setting `this`.
+### Syntax
+
+`fn.call(thisArg, arg1, arg2, ...)`
+### Key points
+
+- Executes immediately
+    
+- `thisArg` becomes `this`
+    
+- Arguments passed individually
+    
+- Temporary binding
+### Example
+
+```
+function greet(city) {   
+console.log(this.name, city); }  
+const user = { name: "Pratik" };  
+greet.call(user, "Pune");
+```
+### Use case
+
+- Borrow methods
+    
+- One-time execution with controlled `this`
+    
+
+---
+## ==`apply()`==
+
+### Definition
+
+Same as `call`, but arguments are passed as an array.
+
+### Syntax
+
+`fn.apply(thisArg, [arg1, arg2, ...])`
+
+### Key points
+
+- Executes immediately
+    
+- `thisArg` becomes `this`
+    
+- Arguments passed as array
+    
+- Useful when arguments are already in array form
+    
+
+### Example
+
+`greet.apply(user, ["Pune"]);`
+
+### Use case
+
+- Dynamic argument lists
+    
+- Legacy code patterns
+    
+---
+## ==`bind()`==
+
+### Definition
+
+Returns a **new function** with `this` permanently bound.
+
+### Syntax
+
+`const newFn = fn.bind(thisArg, arg1, arg2, ...)`
+
+### Key points
+
+- Does **not** execute immediately
+    
+- Returns a new function
+    
+- `this` is fixed forever
+    
+- Supports partial arguments (currying)
+    
+
+### Example
+
+`const boundGreet = greet.bind(user); boundGreet("Pune");`
+
+### Use case
+
+- Passing methods as callbacks
+    
+- Event handlers
+    
+- Preserving context in async code
+    
+
+---
+## Side-by-side comparison
+
+|Feature|call|apply|bind|
+|---|---|---|---|
+|Executes immediately|Yes|Yes|No|
+|Returns function|No|No|Yes|
+|`this` binding|Temporary|Temporary|Permanent|
+|Argument style|Individual|Array|Individual|
+|Rebind possible|Yes|Yes|No|
+
+---
+## Important facts
+
+- `this` is **not** a function parameter
+    
+- `this` is injected into the execution context
+    
+- Arrow functions ignore `call`, `apply`, and `bind`
+    
+- `bind` cannot be overridden
+
+---
+## Common interview traps
+
+- `bind` does not execute
+    
+- `call` and `apply` differ only in argument format
+    
+- Losing `this` happens when methods are detached
+    
+- `this` depends on how a function is called, not where it is defined
 
 

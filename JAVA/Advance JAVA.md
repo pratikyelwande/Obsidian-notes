@@ -1,5 +1,4 @@
 # 📒 Maven 
-
 ---
 ## 📌 1. What is Maven?
 
@@ -17,9 +16,7 @@
         
     4. **Plugins** – Adds tasks like deployment, testing, reporting.
         
-
 ---
-
 ## 📌 2. Why Use Maven?
 
 Without Maven ❌
@@ -44,16 +41,54 @@ With Maven ✅
 
 ## 📌 3. Maven Directory Structure
 
-`my-app  ├── src  │   ├── main  │   │   ├── java         # Source code  │   │   └── resources    # Config files  │   └── test  │       ├── java         # Test code  │       └── resources  ├── target               # Compiled output (auto-generated)  └── pom.xml              # Project Object Model file`
+```
+my-app
+├── pom.xml                  # Project Object Model
+├── src
+│   ├── main
+│   │   ├── java              # Application source code
+│   │   │   └── com/example   # Your packages live here
+│   │   └── resources         # application.properties, YAML, static files
+│   └── test
+│       ├── java              # Unit & integration tests
+│       │   └── com/example
+│       └── resources         # Test configs, test data
+└── target                    # Compiled output (auto-generated)
+
+```
 
 ---
-
 ## 📌 4. The `pom.xml`
 
 Heart of Maven = **POM (Project Object Model)**  
 Example:
 
-`<project xmlns="http://maven.apache.org/POM/4.0.0"          xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"          xsi:schemaLocation="http://maven.apache.org/POM/4.0.0                               http://maven.apache.org/xsd/maven-4.0.0.xsd">      <modelVersion>4.0.0</modelVersion>      <groupId>com.example</groupId>     <artifactId>my-app</artifactId>     <version>1.0-SNAPSHOT</version>      <dependencies>         <!-- Example: JUnit dependency -->         <dependency>             <groupId>junit</groupId>             <artifactId>junit</artifactId>             <version>4.13.2</version>             <scope>test</scope>         </dependency>     </dependencies> </project>`
+```
+<project xmlns="http://maven.apache.org/POM/4.0.0"
+         xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+         xsi:schemaLocation="
+           http://maven.apache.org/POM/4.0.0
+           http://maven.apache.org/xsd/maven-4.0.0.xsd">
+
+    <modelVersion>4.0.0</modelVersion>
+
+    <groupId>com.example</groupId>
+    <artifactId>my-app</artifactId>
+    <version>1.0-SNAPSHOT</version>
+
+    <dependencies>
+        <!-- JUnit for unit testing -->
+        <dependency>
+            <groupId>junit</groupId>
+            <artifactId>junit</artifactId>
+            <version>4.13.2</version>
+            <scope>test</scope>
+        </dependency>
+    </dependencies>
+
+</project>
+
+```
 
 - **groupId** → Organization/project domain (`com.example`).
     
@@ -63,7 +98,6 @@ Example:
     
 - **dependencies** → List of required libraries.
     
-
 ---
 
 ## 📌 5. Maven Lifecycle & Phases
@@ -495,8 +529,8 @@ Objects fetched only when accessed.
 - Use `SessionFactory` + `Session`.
 
 
-# Spring Framework
-## Servlet
+# ==Spring Framework==
+## ==Servlet==
 
 ### Working of servlet
 
@@ -510,8 +544,6 @@ Objects fetched only when accessed.
 - Runs inside a **Servlet Container** (like Tomcat, Jetty, GlassFish).
     
 - Main role: Take input from client (browser), process it (logic/DB), and send a response (HTML/JSON/etc.).
-    
-
 ---
 
 # 🟢 Servlet Lifecycle
@@ -1194,6 +1226,7 @@ Example:
 
 👉 Similar to Servlets Filters. Used to perform tasks like logging, authentication, performance monitoring **before or after** controller execution.
 
+
 ## ==Layered architecture-==
 
 ![[Pasted image 20251001191856.png]]
@@ -1566,8 +1599,7 @@ public ResponseEntity<String> getWithHeader() {
 |@ResponseBody|Map return value → JSON|`@ResponseBody public String hello()`|
 |ResponseEntity|Full control of HTTP response|`ResponseEntity<User> return new ResponseEntity<>(user, HttpStatus.OK)`|
 
-# ==Bean==
-## 🧠 **1. What is Spring Framework?**
+## ==🧠 **1. What is Spring Framework?**==
 
 Spring is a **Java framework** that makes it easy to build **enterprise applications** by handling:
 
@@ -1675,26 +1707,26 @@ It’s created, configured, and destroyed by Spring.
 
 ## 🧩 **6. Ways to Create Beans**
 
-|Method|Description|Example|
-|---|---|---|
-|`@Component`|Automatic bean detection|`@Component public class Student {}`|
-|`@Service`|For service layer classes|`@Service public class StudentService {}`|
-|`@Repository`|For DAO/persistence layer|`@Repository public class StudentRepository {}`|
-|`@Controller`|For MVC controllers|`@Controller public class StudentController {}`|
-|`@RestController`|For REST APIs (JSON/XML)|`@RestController public class ApiController {}`|
-|`@Bean`|Manual bean registration|`@Bean public Student student() { return new Student(); }`|
+| Method            | Description               | Example                                                    |
+| ----------------- | ------------------------- | ---------------------------------------------------------- |
+| `@Component`      | Automatic bean detection  | `@Component public class Student {}`                       |
+| `@Service`        | For service layer classes | `@Service public class StudentService {}`                  |
+| `@Repository`     | For DAO/persistence layer | `@Repository public class StudentRepository {}`            |
+| `@Controller`     | For MVC controllers       | `@Controller public class StudentController {}`            |
+| `@RestController` | For REST APIs (JSON/XML)  | `@RestController public class ApiController {}`            |
+| `@Bean`           | Manual bean registration  | `@Bean public Student student() { return new Student(); }` |
 
 ---
 
 ## 🧱 **7. @Component vs @Bean**
 
-|Feature|`@Component`|`@Bean`|
-|---|---|---|
-|Where used|On **class level**|On **method level** inside a `@Configuration` class|
-|Who creates the object|Spring automatically detects & creates|You manually define and return the object|
-|Used for|Your own classes|Third-party classes or custom config|
-|Scanning required?|Yes (`@ComponentScan`)|No|
-|Example|`@Component public class Student {}`|`@Bean public Student student() { return new Student(); }`|
+| Feature                | `@Component`                           | `@Bean`                                                    |
+| ---------------------- | -------------------------------------- | ---------------------------------------------------------- |
+| Where used             | On **class level**                     | On **method level** inside a `@Configuration` class        |
+| Who creates the object | Spring automatically detects & creates | You manually define and return the object                  |
+| Used for               | Your own classes                       | Third-party classes or custom config                       |
+| Scanning required?     | Yes (`@ComponentScan`)                 | No                                                         |
+| Example                | `@Component public class Student {}`   | `@Bean public Student student() { return new Student(); }` |
 
 ### 🔹 Analogy:
 
@@ -1723,12 +1755,12 @@ It’s created, configured, and destroyed by Spring.
 
 ## 🧠 **9. When to Use What**
 
-|Scenario|Use|
-|---|---|
-|You’re writing your own class|`@Component`, `@Service`, `@Repository`, `@Controller`|
-|You need to register a third-party object|`@Bean`|
-|You want to inject dependencies automatically|`@Autowired`|
-|You want to customize bean creation logic|`@Bean` inside `@Configuration`|
+| Scenario                                      | Use                                                    |
+| --------------------------------------------- | ------------------------------------------------------ |
+| You’re writing your own class                 | `@Component`, `@Service`, `@Repository`, `@Controller` |
+| You need to register a third-party object     | `@Bean`                                                |
+| You want to inject dependencies automatically | `@Autowired`                                           |
+| You want to customize bean creation logic     | `@Bean` inside `@Configuration`                        |
 # 🌿 **Example of a Bean in Spring Boot**
 
 ---
@@ -2236,11 +2268,7 @@ public class DemoApplication {
 > **Q:** What is Dependency Injection in Spring Boot?  
 > **A:** It’s a design pattern where Spring automatically provides an object’s dependencies instead of the class creating them. It promotes loose coupling and easier testing. DI is implemented by the Spring IoC container using annotations like `@Autowired`, `@Component`, `@Service`, etc.
 
-# Bean Scopes — Notes & Code Examples
-
-**Purpose:** Quick reference notes explaining Spring bean scopes with concise definitions, when to use them, interview tips, and full code examples you can drop into a Spring Boot web app.
-
----
+# ==Bean Scopes== 
 
 ## 1. What is a Bean Scope?
 
@@ -2267,7 +2295,6 @@ Default scope in Spring is **`singleton`**.
 |`websocket`|1 per WebSocket session|WebSocket session lifecycle|State per WebSocket connection|
 
 ---
-
 ## 3. Important Notes
 
 - `singleton` is the default.
@@ -2278,7 +2305,6 @@ Default scope in Spring is **`singleton`**.
     
 - When injecting a `request` or `session` scoped bean into a `singleton` bean, use a scoped proxy: `@Scope(value = "request", proxyMode = ScopedProxyMode.TARGET_CLASS)`.
     
-
 ---
 
 ## 4. Full Code Examples
@@ -2497,19 +2523,21 @@ Now a singleton can `@Autowired` this proxy safely.
 
 ==🧠 @ConditionalOnProperty== 
 ---------------------------------------------
-
 🔹 Definition:
+
 @ConditionalOnProperty is used in Spring Boot to enable or disable 
 a bean or configuration based on the value of a property in 
 application.properties or application.yml.
 
 ---------------------------------------------
 🔹 Syntax:
+```
 @ConditionalOnProperty(
     name = "property.name",
     havingValue = "desiredValue",
     matchIfMissing = false
 )
+```
 
 Parameters:
 - name → The property name to check
@@ -2527,11 +2555,14 @@ Parameters:
 
 Step 1: application.properties
 ------------------------------
+```
 database.type=mysql
+```
 # change to nosql to switch
 
 Step 2: DatabaseConfig.java
 ---------------------------
+```
 import org.springframework.boot.autoconfigure.condition.ConditionalOnProperty;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
@@ -2551,9 +2582,11 @@ public class DatabaseConfig {
         return new DatabaseConnection("Connected to NoSQL Database");
     }
 }
+```
 
 Step 3: DatabaseConnection.java
 -------------------------------
+```
 public class DatabaseConnection {
     private String message;
 
@@ -2565,9 +2598,10 @@ public class DatabaseConnection {
         System.out.println(message);
     }
 }
-
+```
 Step 4: DemoApp.java
 --------------------
+```
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.CommandLineRunner;
 import org.springframework.boot.SpringApplication;
@@ -2588,6 +2622,7 @@ public class DemoApp implements CommandLineRunner {
         databaseConnection.connect();
     }
 }
+```
 
 ---------------------------------------------
 🔹 Output:
@@ -2618,11 +2653,15 @@ It helps to load specific beans only when a certain profile is active.
 
 ---------------------------------------------
 🔹 Syntax:
+```
 @Profile("profileName")
+```
 
 Example:
+```
 @Profile("dev")
 public class DevConfig { ... }
+```
 
 ---------------------------------------------
 🔹 Purpose:
@@ -2636,14 +2675,17 @@ public class DevConfig { ... }
 You can define active profiles in:
 application.properties
 -----------------------
+```
 spring.profiles.active=dev
+```
 
 OR in application.yml
 ---------------------
+```
 spring:
   profiles:
     active: dev
-
+```
 You can also set it via command line:
 java -jar app.jar --spring.profiles.active=prod
 
@@ -2721,8 +2763,10 @@ public class DemoApp implements CommandLineRunner {
 
 ---------------------------------------------
 🔹 Output:
+```
 If spring.profiles.active=dev → "Connected to DEV Database"
 If spring.profiles.active=prod → "Connected to PROD Database"
+```
 
 ---------------------------------------------
 🔹 Difference Between @Profile and @ConditionalOnProperty:
@@ -3094,7 +3138,6 @@ public class ServiceB {
 ## 🧱 Propagation Types Explained
 
 ---
-
 ### 🟢 1. `REQUIRED` (Default)
 
 > If a transaction exists, join it; otherwise, create a new one.
@@ -4348,7 +4391,7 @@ Think of it like this:
 
 > ✅ `ResponseEntity` = HTTP Response (Body + Status + Headers)
 
-# 🧩 SPRING BOOT EXCEPTION HANDLING
+# ==🧩 SPRING BOOT EXCEPTION HANDLING==
 
 ---
 ## ⚙️ 1️⃣ What Is Exception Handling?
@@ -4387,11 +4430,11 @@ When an exception occurs inside a controller, Spring passes it through several i
 
 ### 🧠 Role of Each Resolver
 
-|Resolver|Purpose|
-|---|---|
-|**ExceptionHandlerExceptionResolver**|Looks for `@ExceptionHandler` methods (local or global) and calls them.|
-|**ResponseStatusExceptionResolver**|Handles exceptions annotated with `@ResponseStatus`.|
-|**DefaultHandlerExceptionResolver**|Handles framework-level exceptions (e.g., `HttpRequestMethodNotSupportedException`).|
+| Resolver                              | Purpose                                                                              |
+| ------------------------------------- | ------------------------------------------------------------------------------------ |
+| **ExceptionHandlerExceptionResolver** | Looks for `@ExceptionHandler` methods (local or global) and calls them.              |
+| **ResponseStatusExceptionResolver**   | Handles exceptions annotated with `@ResponseStatus`.                                 |
+| **DefaultHandlerExceptionResolver**   | Handles framework-level exceptions (e.g., `HttpRequestMethodNotSupportedException`). |
 
 ---
 
@@ -4399,11 +4442,11 @@ When an exception occurs inside a controller, Spring passes it through several i
 
 Spring Boot provides **3 main ways** to handle exceptions:
 
-|Method|Description|Scope|
-|---|---|---|
-|**`@ExceptionHandler`**|Handles specific exceptions inside a single controller.|Local|
-|**`@ControllerAdvice` / `@RestControllerAdvice`**|Handles exceptions globally for all controllers.|Global|
-|**`@ResponseStatus` / `ResponseStatusException`**|Maps exceptions to HTTP status codes.|Anywhere|
+| Method                                            | Description                                             | Scope    |
+| ------------------------------------------------- | ------------------------------------------------------- | -------- |
+| **`@ExceptionHandler`**                           | Handles specific exceptions inside a single controller. | Local    |
+| **`@ControllerAdvice` / `@RestControllerAdvice`** | Handles exceptions globally for all controllers.        | Global   |
+| **`@ResponseStatus` / `ResponseStatusException`** | Maps exceptions to HTTP status codes.                   | Anywhere |
 
 ---
 
@@ -4478,7 +4521,6 @@ public class GlobalExceptionHandler {
         
     - ✅ Body
         
-
 ### Example:
 
 ```
@@ -4497,7 +4539,6 @@ return new ResponseEntity<>("Handled globally: " + ex.getMessage(), HttpStatus.B
 If you return just `String`, status = **200 OK** (not ideal for errors).
 
 ---
-
 ## 🏷️ 8️⃣ Using `@ResponseStatus` (Custom Exception Class)
 
 ```

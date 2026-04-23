@@ -36,7 +36,7 @@ Here are the different types of the JOINs in SQL:
     
 - **TCL** (Transaction Control Language): `COMMIT`, `ROLLBACK`, `SAVEPOINT`
   
-### **What is a Constraint? Types of Constraints**
+### ==**What is a Constraint? Types of Constraints**==
 
 **Constraints** are rules enforced on data columns to ensure data integrity.
 
@@ -54,14 +54,15 @@ Here are the different types of the JOINs in SQL:
     
 - `DEFAULT`: Sets a default value.
 
-### **Difference between DELETE, TRUNCATE, and DROP**
+### ==**Difference between DELETE, TRUNCATE, and DROP**==
 
-|Command|Removes|Can Use WHERE|Rollback|Resets Identity|
-|---|---|---|---|---|
-|`DELETE`|Specific rows|Yes|Yes|No|
-|`TRUNCATE`|All rows|No|No|Yes|
-|`DROP`|Entire table|No|No|N/A|
-### **What is ACID in SQL?**
+| Command    | Removes       | Can Use WHERE | Rollback | Resets Identity |
+| ---------- | ------------- | ------------- | -------- | --------------- |
+| `DELETE`   | Specific rows | Yes           | Yes      | No              |
+| `TRUNCATE` | All rows      | No            | No       | Yes             |
+| `DROP`     | Entire table  | No            | No       | N/A             |
+|            |               |               |          |                 |
+### ==**What is ACID in SQL?**==
 
 ACID refers to the **four key properties** that ensure **reliable transactions** in a database:
 
@@ -71,8 +72,8 @@ ACID refers to the **four key properties** that ensure **reliable transactions**
 | **C - Consistency** | Data must always be in a valid state before and after a transaction      |
 | **I - Isolation**   | Multiple transactions should not interfere with each other               |
 | **D - Durability**  | Once a transaction is committed, it is saved permanently—even in a crash |
-|                     |                                                                          |
 ### **What are Triggers?**
 
 A **trigger** is a **special stored procedure** that **automatically runs** when an event (like `INSERT`, `UPDATE`, or `DELETE`) occurs on a table.
+
 
